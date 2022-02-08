@@ -3,11 +3,36 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { MainReducer } from './mainReducer';
+import {Provider} from 'react-redux'
+import { MuiThemeProvider, createTheme } from '@material-ui/core/styles';
 
+
+import {createStore, applyMiddleware, compose} from 'redux'
+import rootReducer from './reducer/index'
+import {colors} from './styles/index'
+import { ThemeProvider } from '@emotion/react';
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
+    const store = createStore(rootReducer, composeEnhancers(applyMiddleware()))
+    const theme=createTheme({
+      palette:{
+          primary:{
+            main:colors.primary10,
+            main2:colors.primary5
+          },
+          secondary:{
+            main:colors.primary1
+          }
+      }
+    })
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+   <Provider store={store}>
+   <ThemeProvider theme={theme}>
+   <MainReducer/>
+   </ThemeProvider>
+    
+   </Provider>,
   document.getElementById('root')
 );
 
