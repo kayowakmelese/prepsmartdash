@@ -4,7 +4,7 @@ import { CircularProgress } from '@mui/material';
 import { GridCloseIcon } from '@mui/x-data-grid';
 import * as React from 'react'
 import { connect } from 'react-redux';
-import { addBatchSecurityQuestion, addBatchSexType, addSecurityQuestions, addSexType, setDataReducer, editSexType,setModalReducer,deleteSexType,deleteSecurityQuestion } from '../../../action';
+import { addBatchSecurityQuestion, addBatchSexType, addSecurityQuestions,editSecurityQuestion, addSexType, setDataReducer, editSexType,setModalReducer,deleteSexType,deleteSecurityQuestion } from '../../../action';
 import { colors } from '../../../styles';
 import GenerateCodes from './GenerateCodes';
 import SecurityQuestionScreen from './SecurityQuestions';
@@ -54,6 +54,9 @@ const SettingScreen=(params)=>{
             }else if(params.success.type==="EDITEDSEXTYPE"){
                 setChanged(null)
                 params.changeModalState(false,1,1,null)
+            }else if(params.success.type==="EDITSECURITYQUESTION"){
+                setChanged(null)
+                params.changeModalState(false,1,1,null)
             }
         }
     },[params.success])
@@ -64,7 +67,6 @@ const SettingScreen=(params)=>{
     },[modal])
     React.useEffect(()=>{
         
-        console.log("whyarenotyouchanging",count)
         let arr=batch;
 
         arr.push({value:null})
@@ -197,8 +199,13 @@ eiusmod tempor incididunt ut labore et dolore magna aliqua.</td>
                    <br/><br/>
                    {
                        batch.map((dat,i)=>{
-                           return ( <div><TextField label="Security Question" className="w-f" variant="outlined" value={batch.length>0?batch[i].value:securityQuestionValue} onChange={(e)=>{batch.length>0?batch[i].value=e.target.value:setSecurityQuestionValue(e.target.value)}}/>
+                        let val=params.progress===2?batch[i].value != null?batch[i].value:params.someValue.value:batch[i].value;
+                           console.log("valueee",val)
+                           {/* setChanged(val) */}
+                           return ( <div><TextField label="Security Question" className="w-f" variant="outlined" value={!changed?val:null} onChange={(e)=>{let xx=batch;xx[i].value=e.target.value;setBatch(xx);setChanged(e.target.value);console.log("batch"+batch[i].value!=null,JSON.stringify(batch)+params.progress)}}/>
                                  <br/><br/></div>)
+                           {/* return ( <div><TextField label="Security Question" className="w-f" variant="outlined" value={batch.length>0?batch[i].value:securityQuestionValue} onChange={(e)=>{batch.length>0?batch[i].value=e.target.value:setSecurityQuestionValue(e.target.value)}}/>
+                                 <br/><br/></div>) */}
                        })
                    }
                   
@@ -214,7 +221,7 @@ eiusmod tempor incididunt ut labore et dolore magna aliqua.</td>
                     <button onClick={()=>
         params.changeModalState(false,1,1,null)} className="mrit border"  style={{marginRight:'5%', padding: '0% 10%',color:colors.primary10 }}>Cancel</button>
                     <button style={{ backgroundColor: colors.primary10,color:'white', padding: '3% 10%' }} onClick={() => {
-                        batch.length >0?params.progress===1?params.addBatchSecurityQuestion(batch):params.someValue.value===securityQuestionValue?params.setMessage("No changes made"):params.editSecurityQuestion(securityQuestionValue,params.someValue?params.someValue.value:null):params.setMessage("add security question to continue")
+                        batch.length >0?params.progress===1?params.addBatchSecurityQuestion(batch):params.someValue.value===securityQuestionValue?params.setMessage("No changes made"):params.editSecurityQuestion(batch[0].value,params.someValue?params.someValue.id:null):params.setMessage("add security question to continue")
                     }}>
                         {params.isLoading?
                         <CircularProgress size={15} sx={{color:'white'}}/>:params.progress===1?"Done":"Save"}
@@ -259,7 +266,8 @@ const mapDispatchTopProps=(dispatch)=>{
         addBatchSexType:(batch)=>dispatch(addBatchSexType(batch)),
         deleteSexType:(id)=>dispatch(deleteSexType(id)),
         deleteSecurityQuestion:(id)=>dispatch(deleteSecurityQuestion(id)),
-        editSexType:(value,id)=>dispatch(editSexType(value,id))
+        editSexType:(value,id)=>dispatch(editSexType(value,id)),
+        editSecurityQuestion:(value,id)=>dispatch(editSecurityQuestion(value,id))
 
    
 

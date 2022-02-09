@@ -282,15 +282,19 @@ export const deleteSecurityQuestion=(id)=>{
         })
     }
 }
-export const editSecurityQuestion=(id)=>{
+export const editSecurityQuestion=(value,id)=>{
     return dispatch=>{
         let params={
+            id:id,
+            en:value,
+            es:value
         }
+        console.log("paramsd",params)
         dispatch(setDataReducer(true,null,null,null))
-        axios.delete(`http://${IP}:${PORT}/api/lookups/security-questions/delete/${id}`,params).then((data)=>{
+        axios.put(`http://${IP}:${PORT}/api/lookups/security-questions/update`,params).then((data)=>{
             if(data.data){
                 console.log("datadata",data.data)
-                dispatch(setDataReducer(false,null,{type:"DELETESECURITYQUESTION",message:"security question deleted successfully!"},data.data))
+                dispatch(setDataReducer(false,null,{type:"EDITSECURITYQUESTION",message:"security question updated successfully!"},data.data))
             }else{
             
             }
