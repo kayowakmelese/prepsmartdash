@@ -282,6 +282,48 @@ export const deleteSecurityQuestion=(id)=>{
         })
     }
 }
+export const editSecurityQuestion=(id)=>{
+    return dispatch=>{
+        let params={
+        }
+        dispatch(setDataReducer(true,null,null,null))
+        axios.delete(`http://${IP}:${PORT}/api/lookups/security-questions/delete/${id}`,params).then((data)=>{
+            if(data.data){
+                console.log("datadata",data.data)
+                dispatch(setDataReducer(false,null,{type:"DELETESECURITYQUESTION",message:"security question deleted successfully!"},data.data))
+            }else{
+            
+            }
+            dispatch(loadSecurityQuestions())
+        }).catch((error)=>{
+            dispatch(setDataReducer(false,handleMessages(error).message?handleMessages(error).message:handleMessages(error).error,null,null))
+     
+        })
+    }
+}
+export const editSexType=(value,id)=>{
+    return dispatch=>{
+        let params={
+            id:id,
+            en:value,
+            es:value
+        }
+        console.log("params",params)
+        dispatch(setDataReducer(true,null,null,null))
+        axios.put(`http://${IP}:${PORT}/api/lookups/sex-type/update`,params).then((data)=>{
+            if(data.data){
+                console.log("datadata",data.data)
+                dispatch(setDataReducer(false,null,{type:"EDITEDSEXTYPE",message:"Sex type edited successfully"},data.data))
+            }else{
+            
+            }
+            dispatch(loadSexType())
+        }).catch((error)=>{
+            dispatch(setDataReducer(false,handleMessages(error).message?handleMessages(error).message:handleMessages(error).error,null,null))
+     
+        })
+    }
+}
 
 const handleMessages=(error)=>{
     if (error.response) {

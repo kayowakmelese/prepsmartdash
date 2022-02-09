@@ -4,7 +4,7 @@ import { CircularProgress } from '@mui/material';
 import { GridCloseIcon } from '@mui/x-data-grid';
 import * as React from 'react'
 import { connect } from 'react-redux';
-import { addBatchSecurityQuestion, addBatchSexType, addSecurityQuestions, addSexType, setDataReducer, setModalReducer,deleteSexType,deleteSecurityQuestion } from '../../../action';
+import { addBatchSecurityQuestion, addBatchSexType, addSecurityQuestions, addSexType, setDataReducer, editSexType,setModalReducer,deleteSexType,deleteSecurityQuestion } from '../../../action';
 import { colors } from '../../../styles';
 import GenerateCodes from './GenerateCodes';
 import SecurityQuestionScreen from './SecurityQuestions';
@@ -18,7 +18,8 @@ const SettingScreen=(params)=>{
     const [sexType,setSexType]=React.useState(null)
     const [securityQuestionValue,setSecurityQuestionValue]=React.useState(null)
     const [batch,setBatch]=React.useState([]);
-    const [count,setCount]=React.useState(1)
+    const [count,setCount]=React.useState(1);
+    const [changed,setChanged]=React.useState(null)
     const [id,setId]=React.useState(null);
     React.useEffect(()=>{  
         if(tabvalue===1){
@@ -50,6 +51,9 @@ const SettingScreen=(params)=>{
                 params.changeModalState(false,1,1,null)
             }else if(params.success.type==="DELETESECURITYQUESTION"){
                 params.changeModalState(false,1,1,null)
+            }else if(params.success.type==="EDITEDSEXTYPE"){
+                setChanged(null)
+                params.changeModalState(false,1,1,null)
             }
         }
     },[params.success])
@@ -70,8 +74,11 @@ const SettingScreen=(params)=>{
         
         console.log("batch",batch)
     },[batch])
+    React.useEffect(()=>{
+        setCount(1)
+    },[])
     return <div className="w-f padding">
-        <Box sx={{borderBottom:1,borderColor:colors.primary4}}>
+        <Box sx={{borderBottom:'1px solid '+colors.primary2}}>
               <Tabs value={tabvalue} onChange={(n,e)=>{console.log("eee",e);setTabValue(e)}}   indicatorColor="primary"
 >
                 <Tab label="Sex type" value={1}/>
@@ -128,7 +135,10 @@ eiusmod tempor incididunt ut labore et dolore magna aliqua.</td>
                <br/>
                {
                        batch.map((dat,i)=>{
-                           return ( <div><TextField label="Sex type name" className="w-f" variant="outlined" value={params.progress===2?batch[i].value=params.someValue.value:batch.length>0?batch[i].value:securityQuestionValue} onChange={(e)=>{batch.length>0?batch[i].value=e.target.value:setSecurityQuestionValue(e.target.value)}}/>
+                           let val=params.progress===2?batch[i].value != null?batch[i].value:params.someValue.value:batch[i].value;
+                           console.log("valueee",val)
+                           {/* setChanged(val) */}
+                           return ( <div><TextField label="Sex type name" className="w-f" variant="outlined" value={!changed?val:null} onChange={(e)=>{let xx=batch;xx[i].value=e.target.value;setBatch(xx);setChanged(e.target.value);console.log("batch"+batch[i].value!=null,JSON.stringify(batch)+params.progress)}}/>
                                  <br/><br/></div>)
                        })
                    }
@@ -146,10 +156,10 @@ eiusmod tempor incididunt ut labore et dolore magna aliqua.</td>
                <div className="f-flex m-top" style={{ justifyContent: 'right' }}>
                     <Button variant={'text'} className="mrit" onClick={() => params.changeModalState(false,1,1,null)}  style={{marginRight:'5%', padding: '0% 10%',color:colors.primary10 }}>Cancel</Button>
                     <button variant={'contained'} onClick={()=>  
-                        batch.length >0?params.progress===1?params.addBatchSexType(batch):params.someValue.value===securityQuestionValue?params.setMessage("No changes made"):params.editSexType(securityQuestionValue,params.someValue?params.someValue.value:null):params.setMessage("add sex type to continue")
+                        batch.length >0?params.progress===1?params.addBatchSexType(batch):params.someValue.value===securityQuestionValue?params.setMessage("No changes made"):params.editSexType(batch[0].value,params.someValue?params.someValue.id:null):params.setMessage("add sex type to continue")
                     
                     } disableElevation style={{ backgroundColor: colors.primary10,color:'white', padding: '3% 10%' }}>{
-                       params.isLoading?<CircularProgress size={15} sx={{color:'white'}}/>:"Add"
+                       params.isLoading?<CircularProgress size={15} sx={{color:'white'}}/>:params.progress===1?"ADD":"SAVE"
                     }</button>
                 </div>
            </div>:<DeleteScreen isLoading={params.isLoading} cancel={()=>params.changeModalState(false,1,1,null)} actions={()=>{
@@ -248,7 +258,8 @@ const mapDispatchTopProps=(dispatch)=>{
         addBatchSecurityQuestion:(batch)=>dispatch(addBatchSecurityQuestion(batch)),
         addBatchSexType:(batch)=>dispatch(addBatchSexType(batch)),
         deleteSexType:(id)=>dispatch(deleteSexType(id)),
-        deleteSecurityQuestion:(id)=>dispatch(deleteSecurityQuestion(id))
+        deleteSecurityQuestion:(id)=>dispatch(deleteSecurityQuestion(id)),
+        editSexType:(value,id)=>dispatch(editSexType(value,id))
 
    
 
