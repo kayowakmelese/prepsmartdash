@@ -120,6 +120,25 @@ export const loadSecurityQuestions=()=>{
         })
     }
 }
+export const loadAllUsers=()=>{
+    return dispatch=>{
+        let params={
+
+        }
+        dispatch(setDataReducer(true,null,null,null))
+        axios.get(`http://${IP}:${PORT}/api/admin/all/users`,params).then((data)=>{
+            if(data.data){
+                console.log("datadata",data.data)
+                dispatch(setDataReducer(false,null,{type:"ALLUSERS",message:"users loaded successfully!"},data.data.users))
+            }else{
+            
+            }
+        }).catch((error)=>{
+            dispatch(setDataReducer(false,handleMessages(error).message?handleMessages(error).message:handleMessages(error).error,null,null))
+     
+        })
+    }
+}
 export const loadSexType=()=>{
     return dispatch=>{
         let params={

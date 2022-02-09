@@ -4,12 +4,25 @@ import { Button, IconButton, Modal, TextField, Typography,Avatar,Box,Tabs,Tab,Ta
 import { colors } from '../../../styles';
 import { AddCircleRounded,ChevronLeft,Add, Search } from '@mui/icons-material';
 import { InputAdornment } from '@material-ui/core';
-
-const UserScreen=()=>{
+import {setDataReducer,loadAllUsers} from '../../../action/index'
+import {connect} from 'react-redux'
+import LoadingData from '../../../components/loadingData'
+const UserScreen=(params)=>{
     const [modal,setModal]=React.useState(false);
     const [modalProgress,setModalProgress]=React.useState(1);
     const [screen,setScreen]=React.useState(2);
     const [tabvalue,setTabValue]=React.useState(1)
+    const [allData,setAllData]=React.useState(null)
+    React.useEffect(()=>{
+        params.loadUsers()
+    },[])
+    React.useEffect(()=>{
+      if(params.success){
+        if(params.success.type==="ALLUSERS"){
+              setAllData(params.data)
+        }
+      }
+    },[params.success])
     const columns = [
         { field: 'id', headerName: 'ID', width: 70 },
         { field: 'firstName', headerName: 'First name', width: 130 },
@@ -94,14 +107,53 @@ const UserScreen=()=>{
             
         <Button onClick={()=>setModal(true)} style={{backgroundColor:colors.primary10,color:'white'}} className={'w-20'}>Add</Button>
         </div>
-            <DataGrid
-        rows={rows}
-        columns={columns}
-        pageSize={5}
-        rowsPerPageOptions={[5]} sx={{height: 300,border:1,borderColor:'#ccc','& .MuiDataGrid-cell':{
-                borderBottom:1,borderColor:'#ccc'
-            } }}
-      />
+        <br/>
+            <div className="w-f" style={{overflowX:'scroll'}}>
+             <table style={{width:1300}}>
+                    <tr className="eee">
+                        <th className="w-5 padding">#</th>
+                        <th className="w-5">Code</th>
+                        <th className="w-20">Name</th>
+                        <th className="w-10">Email</th>
+                         <th className="w-10">Phone number</th>
+                        <th className="w-10">Date added</th>
+                        <th className="w-10">Last login</th>
+                         <th className="w-10">Role </th>
+                        <th className="w-5">Status</th>
+                        <th className="w-5">Action</th>
+                    </tr>
+                   {allData?
+                     allData.map((dat,i)=>{
+                       return  <tr>
+                    <td className="padding">1</td>
+                    <td className="padding">35</td>
+                     <td className="f-flex padding"><Avatar color={'primary'}>KM</Avatar><p style={{alignSelf:'center',marginLeft:10}}>{dat.firstName} {dat.lastName}</p></td>
+                     <td>kayomelese4@gmail.com</td>
+                      <td className="padding">{dat.phoneNumber}</td>
+                       <td className="padding">today</td>
+                         <td className="padding">13 Dec 2021</td>
+                         <td className="padding">user</td>
+                         <td>
+                             <div className={`${dat.isOnCycle?'green':'red'} w-50`}>
+                            <Typography color={dat.isOnCycle?'green':'orangered'} variant={'p'} sx={{color:dat.isOnCycle?'green !important':'orangered !important',borderColor:dat.isOnCycle?'green':'red',borderWidth:1}} >{dat.isOnCycle?"Active":"Deactive"}</Typography>
+            </div>
+                         </td>
+                         <td>
+                           <center>
+                <div style={{alignContent:'center',justifyContent:'space-around',alignSelf:'center'}}>
+                  <IconButton onClick={()=>{}}>
+                  <img src="../../../icons/edit.svg" height={20} width={20} style={{alignSelf:'center'}}/>
+                  </IconButton>
+                
+    
+                </div></center>
+                         </td>
+                     
+                    </tr>
+                     }):params.isLoading?<LoadingData/>:null
+                   }
+                    </table>
+                    </div>
           </div>
           :<div >
             <div className="f-flex">
@@ -246,4 +298,26 @@ const UserScreen=()=>{
         
     )
 }
-export default UserScreen
+const mapStateToProps=(state)=>{
+  return {
+      isLoading:state.sendDataReducer.isLoading,
+      success:state.sendDataReducer.success,
+      error:state.sendDataReducer.error,
+      data:state.sendDataReducer.data,
+      modalVisible:state.ModalReducer.visible,
+      screen:state.ModalReducer.screen,
+      progress:state.ModalReducer.progress,
+      someValue:state.ModalReducer.someValue
+  }
+}
+const mapDispatchTopProps=(dispatch)=>{
+  return {
+      setMessage:(message)=>dispatch(setDataReducer(false,message,null,null)),
+      loadUsers:()=>dispatch(loadAllUsers())
+ 
+
+ 
+
+  }
+}
+export default connect(mapStateToProps,mapDispatchTopProps)(UserScreen)
