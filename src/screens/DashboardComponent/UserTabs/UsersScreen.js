@@ -4,15 +4,22 @@ import { Button, IconButton, Modal, TextField, Typography,Avatar,Box,Tabs,Tab,Ta
 import { colors } from '../../../styles';
 import { AddCircleRounded,ChevronLeft,Add, Search } from '@mui/icons-material';
 import { InputAdornment } from '@material-ui/core';
-import {setDataReducer,loadAllUsers} from '../../../action/index'
+import {setDataReducer,loadAllUsers,loadEncouters} from '../../../action/index'
 import {connect} from 'react-redux'
 import LoadingData from '../../../components/loadingData'
+import moment from 'moment'
+
+
+
 const UserScreen=(params)=>{
     const [modal,setModal]=React.useState(false);
     const [modalProgress,setModalProgress]=React.useState(1);
-    const [screen,setScreen]=React.useState(2);
+    const [screen,setScreen]=React.useState(1);
     const [tabvalue,setTabValue]=React.useState(1)
     const [allData,setAllData]=React.useState(null)
+    const [selectedId,setSelectedId]=React.useState(null)
+    const [detailData,setDetailData]=React.useState(null)
+    const [encounters,setEncounters]=React.useState(null)
     React.useEffect(()=>{
         params.loadUsers()
     },[])
@@ -20,27 +27,12 @@ const UserScreen=(params)=>{
       if(params.success){
         if(params.success.type==="ALLUSERS"){
               setAllData(params.data)
+        }else if(params.success.type==="USERENCOUNTER"){
+          setEncounters(params.data)
         }
       }
     },[params.success])
-    const columns = [
-        { field: 'id', headerName: 'ID', width: 70 },
-        { field: 'firstName', headerName: 'First name', width: 130 },
-        { field: 'lastName', headerName: 'Last name', width: 130 },
-        {
-          field: 'age',
-          headerName: 'Age',
-          type: 'number',
-          width: 90,
-        },
-        {
-          field: 'fullName',
-          headerName: 'Full name',
-          description: 'This column has a value getter and is not sortable.',
-          sortable: false,
-          width: 160,
-        },
-      ];
+    
       const columns2 = [
         { field: 'id', headerName: '#', width: 70 },
         { field: 'DateAdded', headerName: 'Date added', width: 130 },
@@ -109,7 +101,8 @@ const UserScreen=(params)=>{
         </div>
         <br/>
             <div className="w-f" style={{overflowX:'scroll'}}>
-             <table style={{width:1300}}>
+            {
+              allData?<table style={{width:1300}}>
                     <tr className="eee">
                         <th className="w-5 padding">#</th>
                         <th className="w-5">Code</th>
@@ -122,9 +115,11 @@ const UserScreen=(params)=>{
                         <th className="w-5">Status</th>
                         <th className="w-5">Action</th>
                     </tr>
-                   {allData?
+                   {
                      allData.map((dat,i)=>{
-                       return  <tr>
+                       return  <tr className="tr-hover" style={{cursor:'pointer'}} onClick={()=>{
+                         setScreen(2);setSelectedId(dat.userId);params.loadEncouters(dat.userId);setDetailData(dat);
+                       }}>
                     <td className="padding">1</td>
                     <td className="padding">35</td>
                      <td className="f-flex padding"><Avatar color={'primary'}>KM</Avatar><p style={{alignSelf:'center',marginLeft:10}}>{dat.firstName} {dat.lastName}</p></td>
@@ -150,9 +145,11 @@ const UserScreen=(params)=>{
                          </td>
                      
                     </tr>
-                     }):params.isLoading?<LoadingData/>:null
+                     })
                    }
-                    </table>
+                    </table>:params.isLoading?<LoadingData/>:null
+            }
+             
                     </div>
           </div>
           :<div >
@@ -160,9 +157,9 @@ const UserScreen=(params)=>{
             <IconButton onClick={()=>setScreen(1)}>
               <ChevronLeft/>
             </IconButton>
-            <Avatar color={'primary'} style={{alignSelf:'center'}}>KM</Avatar>
+            <Avatar color={'primary'} style={{alignSelf:'center'}}>{detailData?detailData.firstName.charAt(0).toUpperCase()+detailData.lastName.charAt(0).toUpperCase():null}</Avatar>
             <Typography variant={'p'} style={{alignSelf:'center',marginLeft:'2%'}}>
-              <b>Kayowak melese</b>
+              <b>{detailData?detailData.firstName+ " "+detailData.lastName:null}</b>
             </Typography>
             </div>
             <Box sx={{borderBottom:1,borderColor:colors.primary4}}>
@@ -191,15 +188,15 @@ const UserScreen=(params)=>{
                   </div>
                       <div className="f-flex b-bottom" style={{justifyContent:'space-between'}}>
                       <p>Full name</p>
-                      <p><b>Kayowak melese</b></p>
+                      <p><b>{detailData?detailData.firstName+ " "+detailData.lastName:null}</b></p>
                       </div>
                       <div className="f-flex b-bottom" style={{justifyContent:'space-between'}}>
                       <p>Email</p>
-                      <p><b>kayomelese4@gmail.com</b></p>
+                      <p><b>{detailData?detailData.email:null}</b></p>
                       </div>
                       <div className="f-flex b-bottom" style={{justifyContent:'space-between'}}>
                       <p>Phone number</p>
-                      <p><b>+251 949490003</b></p>
+                      <p><b>{detailData?detailData.phoneNumber:null}</b></p>
                       </div>
                       <div className="f-flex b-bottom" style={{justifyContent:'space-between'}}>
                       <p>Birthplace</p>
@@ -215,14 +212,54 @@ const UserScreen=(params)=>{
                 </div>:
                 tabvalue===2?
                 <div style={{height:500}}>
-                <DataGrid className="w-f" xs={{minHeight:500}}
-        rows={rows}
-        columns={columns2}
-        pageSize={5}
-        rowsPerPageOptions={[5]} sx={{height: 800,border:1,borderColor:'#ccc','& .MuiDataGrid-cell':{
-                borderBottom:1,borderColor:'#ccc'
-            } }}
-      />
+                <div className="w-f" style={{overflowX:'scroll'}}>
+                {encounters?
+                  <table>
+                    <tr className="eee">
+                        <th className="w-10 padding">#</th>
+                        <th className="w-20">Date added</th>
+                        <th className="w-20">Type</th>
+                        <th className="w-20">Noted</th>
+                         <th className="w-10">Status</th>
+                        
+                        <th className="w-5">Action</th>
+                    </tr>
+                   {
+                    encounters.map((dat,i)=>{
+                       return  <tr className="tr-hover" style={{cursor:'pointer'}} >
+                    <td className="padding">1</td>
+                    <td className="padding">{moment(dat.createdDate).format("MM/DD/YYYY")}</td>
+                     <td className="f-flex padding">
+                     {
+                       dat.sexType.map((da,i)=>{
+                         return <p>{da.en}</p>
+                       })
+                     }</td>
+                     <td>{dat.comment?dat.comment:"no notes"}</td>
+                     
+                         <td>
+                             <div className={`${dat.status==="protected"?'green':'red'} w-50`}>
+                            <Typography color={dat.status==="protected"?'green':'orangered'} variant={'p'} sx={{color:dat.status==="protected"?'green !important':'orangered !important',borderColor:dat.status==="protected"?'green':'red',borderWidth:1}} >{dat.status==="protected"?"Protected":"Unprotected"}</Typography>
+            </div>
+                         </td>
+                         <td>
+                           <center>
+                <div style={{alignContent:'center',justifyContent:'space-around',alignSelf:'center'}}>
+                  <IconButton onClick={()=>{}}>
+                  <img src="../../../icons/edit.svg" height={20} width={20} style={{alignSelf:'center'}}/>
+                  </IconButton>
+                
+    
+                </div></center>
+                         </td>
+                     
+                    </tr>
+                     })
+                   }
+                    </table>:params.isLoading?<LoadingData/>:null
+                }
+             
+                    </div>
                 </div>:null
               }
               </div>
@@ -313,7 +350,8 @@ const mapStateToProps=(state)=>{
 const mapDispatchTopProps=(dispatch)=>{
   return {
       setMessage:(message)=>dispatch(setDataReducer(false,message,null,null)),
-      loadUsers:()=>dispatch(loadAllUsers())
+      loadUsers:()=>dispatch(loadAllUsers()),
+      loadEncouters:(id)=>dispatch(loadEncouters(id))
  
 
  

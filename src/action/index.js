@@ -139,6 +139,29 @@ export const loadAllUsers=()=>{
         })
     }
 }
+export const loadEncouters=(id)=>{
+    return dispatch=>{
+        let params={
+
+        }
+        dispatch(setDataReducer(true,null,null,null))
+        axios.get(`http://${IP}:${PORT}/api/admin/user/${id}/encounter`,params,{
+            headers:{
+                'Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJGRU1wcm5sVnJsbjZBWWM2a0lxcGYiLCJpYXQiOjE2NDI2MjAxMTk2ODYsImV4cCI6MTY0MjcwNjUxOTY4Nn0.oebR4vLN8lhtclkNLijwdU6sfQ22ekw7q-PCPus-Jk0'
+            }
+        }).then((data)=>{
+            if(data.data){
+                console.log("datadata",data.data)
+                dispatch(setDataReducer(false,null,{type:"USERENCOUNTER",message:"users loaded successfully!"},data.data.encounters))
+            }else{
+            
+            }
+        }).catch((error)=>{
+            dispatch(setDataReducer(false,handleMessages(error).message?handleMessages(error).message:handleMessages(error).error,null,null))
+     
+        })
+    }
+}
 export const loadSexType=()=>{
     return dispatch=>{
         let params={
