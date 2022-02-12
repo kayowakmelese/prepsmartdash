@@ -85,10 +85,11 @@ export const createAdmin=(firstname,lastname,email,password)=>{
         })
     }
 }
-export const generateCodes=(number)=>{
+export const generateCodes=(number,expdate)=>{
     return dispatch=>{
         let params={
-            count:parseInt(number)
+            count:parseInt(number),
+            expiryDate:expdate
         }
         dispatch(setDataReducer(true,null,null,null))
         axios.post(`http://${IP}:${PORT}/api/invitation-code/add`,params).then((data)=>{
@@ -170,7 +171,7 @@ export const loadMessages=()=>{
         axios.get(`http://${IP}:${PORT}/api/sms/messages`,params).then((data)=>{
             if(data.data){
                 console.log("datadata",data.data)
-                dispatch(setDataReducer(false,null,{type:"ALLMESSAGES",message:"users loaded successfully!"},data.data.messages))
+                dispatch(setDataReducer(false,null,{type:"ALLMESSAGES",message:null},data.data.messages))
             }else{
             
             }
@@ -191,7 +192,7 @@ export const loadAdmins=()=>{
         }).then((data)=>{
             if(data.data){
                 console.log("datadata3",data.data)
-                dispatch(setDataReducer(false,null,{type:"ALLADMINS",message:"users loaded successfully!"},data.data))
+                dispatch(setDataReducer(false,null,{type:"ALLADMINS",message:"users loaded successfully!"},data.data.admins))
             }else{
             
             }
@@ -265,6 +266,28 @@ export const addSexType=(en)=>{
         })
     }
 }
+export const sendMessage=(to,text)=>{
+    return dispatch=>{
+        let params={
+            to:to,
+            text:text
+        }
+        dispatch(setDataReducer(true,null,null,null))
+        axios.post(`http://${IP}:${PORT}/api/sms/send`,params).then((data)=>{
+            if(data.data){
+                console.log("datadata",data.data)
+                dispatch(setDataReducer(false,null,{type:"SENTMESSAGE",message:"Message Sent Successfully"},data.data))
+                dispatch(loadMessages())
+            }else{
+            
+            }
+            dispatch(loadSexType())
+        }).catch((error)=>{
+            dispatch(setDataReducer(false,handleMessages(error).message?handleMessages(error).message:handleMessages(error).error,null,null))
+     
+        })
+    }
+}
 export const addSecurityQuestions=(en)=>{
     return dispatch=>{
         let params={
@@ -294,7 +317,7 @@ export const addBatchSecurityQuestion=(batch)=>{
             if(batch[i].value){
                 xx.push({
                     en:batch[i].value,
-                    es:batch[i].value,
+                    es:batch[i].es,
                     isActive:true
                 })
             }
@@ -325,7 +348,7 @@ export const addBatchSexType=(batch)=>{
             if(batch[i].value){
                 xx.push({
                     en:batch[i].value,
-                    es:batch[i].value,
+                    es:batch[i].es,
                     isActive:true
                 })
             }
@@ -367,6 +390,26 @@ export const deleteSexType=(id)=>{
         })
     }
 }
+export const deleteInvitationCode=(id)=>{
+    return dispatch=>{
+        let params={
+        }
+        dispatch(setDataReducer(true,null,null,null))
+        axios.delete(`http://${IP}:${PORT}/api/invitation-code/delete/${id}`,params).then((data)=>{
+            if(data.data){
+                console.log("datadata",data.data)
+                dispatch(setDataReducer(false,null,{type:"DELETECODE",message:"sex type deleted successfully!"},data.data))
+                dispatch(loadGeneratedCodes())
+            }else{
+            
+            }
+            dispatch(loadSexType())
+        }).catch((error)=>{
+            dispatch(setDataReducer(false,handleMessages(error).message?handleMessages(error).message:handleMessages(error).error,null,null))
+     
+        })
+    }
+}
 export const deleteSecurityQuestion=(id)=>{
     return dispatch=>{
         let params={
@@ -386,12 +429,12 @@ export const deleteSecurityQuestion=(id)=>{
         })
     }
 }
-export const editSecurityQuestion=(value,id)=>{
+export const editSecurityQuestion=(value,es,status,id)=>{
     return dispatch=>{
         let params={
             id:id,
             en:value,
-            es:value
+            es:es
         }
         console.log("paramsd",params)
         dispatch(setDataReducer(true,null,null,null))
@@ -409,12 +452,33 @@ export const editSecurityQuestion=(value,id)=>{
         })
     }
 }
-export const editSexType=(value,id)=>{
+export const updateUser=(id,isActive)=>{
+    return dispatch=>{
+        let params={
+            isActive:isActive
+        }
+        console.log("paramsd",params)
+        dispatch(setDataReducer(true,null,null,null))
+        axios.post(`http://${IP}:${PORT}/api/admin/user/${id}/update`,params).then((data)=>{
+            if(data.data){
+                console.log("datadata",data.data)
+                dispatch(setDataReducer(false,null,{type:"UPDATEUSER",message:"user updated successfully!"},data.data))
+            }else{
+            
+            }
+            dispatch(loadAllUsers())
+        }).catch((error)=>{
+            dispatch(setDataReducer(false,handleMessages(error).message?handleMessages(error).message:handleMessages(error).error,null,null))
+     
+        })
+    }
+}
+export const editSexType=(value,es,status,id)=>{
     return dispatch=>{
         let params={
             id:id,
             en:value,
-            es:value
+            es:es
         }
         console.log("params",params)
         dispatch(setDataReducer(true,null,null,null))

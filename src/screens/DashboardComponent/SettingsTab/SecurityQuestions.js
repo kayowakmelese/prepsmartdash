@@ -44,7 +44,7 @@ const SecurityQuestionScreen=(params)=>{
                 return  <tr style={{borderBottom:'1px solid #222 !important'}}>
             <td className="padding">{o+1}</td>
             <td>{dat.value}</td>
-            <td>{dat.value}</td>
+            <td>{dat.es}</td>
             <td>Active</td>
             <td>{moment().format('MMM DD ,HH:MM a')}</td>
             <td className="f-flex padding" style={{alignSelf:'center',justifyContent:'center'}}>

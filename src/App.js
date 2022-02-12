@@ -22,6 +22,7 @@ import SexTypeScreen from './screens/DashboardComponent/SettingsTab/SexTypeTab'
 import AdminScreen from './screens/DashboardComponent/Admins/AdminScreen'
 import MessageScreen from './screens/DashboardComponent/messages/index'
 
+import EncounterScreen from './screens/DashboardComponent/UserTabs/EncounterTab'
 function App(props) {
   React.useEffect(()=>{
     props.setData();
@@ -42,6 +43,8 @@ function App(props) {
           <Route path={'SecurityQuestion'} element={<SecurityQuestionScreen/>}/>
           <Route path={'Sextype'} element={<SexTypeScreen/>}/>
           <Route path={'admins'} element={<AdminScreen/>}/> 
+          <Route path={'encounters'} element={<EncounterScreen/>}/>
+
           
           <Route path={'messages'} element={<MessageScreen/>}/>
 

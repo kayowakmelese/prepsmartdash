@@ -266,7 +266,7 @@ const mapDispatchTopProps=(dispatch)=>{
         addBatchSexType:(batch)=>dispatch(addBatchSexType(batch)),
         deleteSexType:(id)=>dispatch(deleteSexType(id)),
         deleteSecurityQuestion:(id)=>dispatch(deleteSecurityQuestion(id)),
-        editSexType:(value,id)=>dispatch(editSexType(value,id)),
+        editSexType:(value,status,id)=>dispatch(editSexType(value,status,id)),
         editSecurityQuestion:(value,id)=>dispatch(editSecurityQuestion(value,id))
 
    

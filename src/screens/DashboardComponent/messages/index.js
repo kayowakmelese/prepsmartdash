@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {loadMessages, setDataReducer} from '../../../action/index'
+import {loadMessages, setDataReducer,sendMessage} from '../../../action/index'
 import {connect} from 'react-redux'
 import LoadingData from '../../../components/loadingData'
 import { colors } from '../../../styles'
@@ -9,6 +9,7 @@ import { IconButton,TextField } from '@mui/material'
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CloseIcon from '@mui/icons-material/Close';
+import { CircularProgress } from '@material-ui/core'
 const MessageScreen=(params)=>{
     const [messages,setMessages]=React.useState(null)
     const [screen,setScreen]=React.useState(1)
@@ -20,7 +21,15 @@ const MessageScreen=(params)=>{
         if(params.success){
             if(params.success.type==="ALLMESSAGES"){
                 setMessages(params.data)
+              
+            }else if(params.success.type==="SENTMESSAGE"){
+                setMessages(params.data)
+                if(screen===2){
+                    parseData(selectedUser.direction==="outbound-api"?selectedUser.to:selectedUser.from)
+                }
             }
+
+            
         }
     },[params.success])
     React.useEffect(()=>{
@@ -33,6 +42,7 @@ const MessageScreen=(params)=>{
                     arr.push(messages[i])
                 }
         }
+        arr.reverse();
         setParsedData(arr);
         return arr;
     }
@@ -57,6 +67,7 @@ const MessageScreen=(params)=>{
                         </div>;
                     }):params.isLoading?<LoadingData/>:null:
                     <div className="padding " style={{alignSelf:'center',alignContent:'center',position:'relative'}}>
+                    
                     <div className="f-flex">
                     <IconButton onClick={()=>setScreen(1)}>
                         <ChevronLeft/>
@@ -64,7 +75,7 @@ const MessageScreen=(params)=>{
                         <p style={{alignSelf:'center'}}>{selectedUser.to}</p>
                         <br/>
                         </div>
-                        <div>
+                        <div style={{maxHeight:400,overflowY:'scroll'}}>
                         {
                             parsedData?parsedData.map((dat,i)=>{
                                 return <div className={`padding f-flex ${dat.to===(selectedUser.direction==='outbound-api'?selectedUser.to:selectedUser.from)?'bubble-right':'bubble-left'}`}>
@@ -83,13 +94,18 @@ const MessageScreen=(params)=>{
                             }):null
                         }
                         </div>
+                        
                         <div className="white f-flex" style={{justifyContent:'center'}}>
                             <TextField label="reply message" value={message} onChange={(e)=>setMessage(e.target.value)} className="w-90"/>
-                        <IconButton onClick={()=>{
-                            message.trim().length>0?params.sendMessage(message,selectedUser.direction==='outbound-api'?selectedUser.to:selectedUser.from):params.setMessage("add reply message to send")
+                        
+                        {
+                            params.isLoading?<CircularProgress size={20} color={'blue'} className="padding"/>:  <IconButton onClick={()=>{
+                            message.trim().length>0?params.sendMessage(selectedUser.direction==='outbound-api'?selectedUser.to:selectedUser.from,message):params.setMessage("add reply message to send")
                         }}>
                             <Send/>
                         </IconButton>
+                        }
+                      
                         </div>
                     </div>
                    
@@ -110,6 +126,7 @@ const mapDispatchTopProps=(dispatch)=>{
     return {
         loadMessages:()=>dispatch(loadMessages()),
         setMessage:(message)=>dispatch(setDataReducer(false,message,null,null)),
+        sendMessage:(to,text)=>dispatch(sendMessage(to,text))
     }
 }
 export default connect(mapStateToProps,mapDispatchTopProps)(MessageScreen)

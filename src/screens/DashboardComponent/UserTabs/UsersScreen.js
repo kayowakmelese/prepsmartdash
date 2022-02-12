@@ -1,14 +1,16 @@
 import * as React from 'react'
 import { DataGrid } from '@mui/x-data-grid';
-import { Button, IconButton, Modal, TextField, Typography,Avatar,Box,Tabs,Tab,TabPanel ,MenuItem,Select} from '@mui/material';
+import { Button, IconButton, Modal, TextField, Typography,Avatar,Box,Tabs,Tab,TabPanel ,MenuItem,Select,CircularProgress} from '@mui/material';
 import { colors } from '../../../styles';
 import { AddCircleRounded,ChevronLeft,Add, Search } from '@mui/icons-material';
 import { InputAdornment } from '@material-ui/core';
-import {setDataReducer,loadAllUsers,loadEncouters} from '../../../action/index'
+import {setDataReducer,loadAllUsers,loadEncouters,updateUser} from '../../../action/index'
 import {connect} from 'react-redux'
 import LoadingData from '../../../components/loadingData'
 import moment from 'moment'
-
+import {DesktopDatePicker} from '@mui/lab';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import DateAdapter from '@mui/lab/AdapterMoment';
 
 
 const UserScreen=(params)=>{
@@ -19,6 +21,13 @@ const UserScreen=(params)=>{
     const [selectedId,setSelectedId]=React.useState(null)
     const [detailData,setDetailData]=React.useState(null)
     const [encounters,setEncounters]=React.useState(null)
+    const [minDate,setMinDate]=React.useState(moment())
+    const [maxDate,setMaxDate]=React.useState(moment())
+    const [selectedDate, handleDateChange] = React.useState(new Date());
+    const [status,setStatus]=React.useState("All");
+    const [isActive,setIsActive]=React.useState(null)
+    const [sortedData,setSortedData]=React.useState(null)
+
     React.useEffect(()=>{
         params.loadUsers()
     },[])
@@ -26,8 +35,12 @@ const UserScreen=(params)=>{
       if(params.success){
         if(params.success.type==="ALLUSERS"){
               setAllData(params.data)
+              
+        computeActive(status)
         }else if(params.success.type==="USERENCOUNTER"){
           setEncounters(params.data)
+        }else if(params.success.type==="UPDATEUSER"){
+          setScreen(1);
         }
       }
     },[params.success])
@@ -88,6 +101,40 @@ const UserScreen=(params)=>{
         { id: 8, lastName: 'Frances', DateAdded: 'Rossini', age: 36,status:'active',action:true },
         { id: 9, lastName: 'Roxie', DateAdded: 'Harvey', age: 65,status:'active',action:true },
       ];
+      const computeMinMax=(min,max)=>{
+        let computed=[];
+        for(var i=0;i<allData.length;i++){
+          console.log("resulto",moment(allData[i].createdDate).diff(moment(min),'hours'))
+          if(moment(allData[i].createdDate).diff(moment(min),'hours') >0 && moment(max).diff(allData[i].createdDate,'hours') >=0 ){
+            computed.push(allData[i])
+          }
+        }
+        setSortedData(computed)
+        
+      }
+      const computeActive=(value)=>{
+        let computed=[];
+        if(value!=="All"){
+        for(var i=0;i<allData.length;i++){
+          if(allData[i].isOnCycle+''===value){
+            computed.push(allData[i])
+          }
+        }
+        setSortedData(computed)
+      }else{
+        setSortedData(null)
+      }
+      }
+      React.useEffect(()=>{
+        if(allData){
+
+          computeMinMax(minDate,maxDate)
+        }
+      },[minDate,maxDate])
+      React.useEffect(()=>{
+        computeActive(status)
+        // computeMinMax(minDate,maxDate)
+    },[status])
     return (
         
         <div>
@@ -101,19 +148,34 @@ const UserScreen=(params)=>{
             <TextField label="search" placeholder="search" variant='outlined' className='w-30'/>
             <div className="f-flex w-40 " style={{justifyContent:'space-between',alignContent:'center'}}>
               <Typography variant="p" style={{fontSize:15,alignSelf:'center',textAlign:'center'}} className="w-30">Created at</Typography>
-              <input type="date" placeholder='start date' className="w-40"/>
-              <input type="date" placeholder='end date' className="w-40"/>
+             <LocalizationProvider dateAdapter={DateAdapter}>
+              <DesktopDatePicker
+          label="minimum date"
+          inputFormat="MM/dd/yyyy"
+          value={minDate}
+          onChange={setMinDate}
+          renderInput={(params) => <TextField {...params} />}/>
+
+           <DesktopDatePicker
+          label="maximum date"
+          inputFormat="MM/dd/yyyy"
+          value={maxDate}
+          onChange={setMaxDate}
+          renderInput={(params) => <TextField {...params} />}
+       />
+       </LocalizationProvider>
             </div>
             <div className="f-flex w-20 " style={{justifyContent:'center',alignContent:'center'}}>
               <Typography variant="p" style={{fontSize:15,alignSelf:'center'}} className="padding" >Status</Typography>
               <Select className="w-50"
                 labelId="demo-simple-select-label"
-                value={1}
+                value={status}
                 label="status"
+                onChange={(e)=>setStatus(e.target.value)}
   >
-        <MenuItem value={1}>All</MenuItem>
-        <MenuItem value={2}>Active</MenuItem>
-        <MenuItem value={3}>Inactive</MenuItem>
+        <MenuItem value={"All"}>All</MenuItem>
+        <MenuItem value={"true"}>Active</MenuItem>
+        <MenuItem value={"false"}>Deactive</MenuItem>
   </Select>
             </div>
           </div>
@@ -131,20 +193,47 @@ const UserScreen=(params)=>{
                         <th className="w-10">Created at</th>
                         <th className="w-5">Action</th>
                     </tr>
-                   {
+                   {sortedData?
+                     sortedData.map((dat,i)=>{
+                       return  <tr className="tr-hover" style={{cursor:'pointer'}} onClick={()=>{
+                         setScreen(2);setSelectedId(dat.userId);params.loadEncouters(dat.userId);setDetailData(dat);
+                       }}>
+                    <td className="padding" >{i+1}</td>
+                    <td><p style={{alignSelf:'center',marginLeft:10,color:colors.primary10}}>{dat.firstName} {dat.lastName}</p></td>
+                     <td>{dat.email}</td>
+                     <td>
+                             <p className={`${dat.isActive?'green':'red'} w-30`}>
+                            <Typography color={dat.isActive?'green':'orangered'} variant={'p'} sx={{color:dat.isActive?'green !important':'orangered !important',borderColor:dat.isOnCycle?'green':'red',borderWidth:1}} >{dat.isActive?"Active":"Deactive"}</Typography>
+            </p>
+                         </td>
+                         <td className="padding">{moment(dat.createdDate).format("MMM DD HH:MM")}</td>
+                        
+                         <td>
+                           <center>
+                <div style={{alignContent:'center',justifyContent:'space-around',alignSelf:'center'}}>
+                  <IconButton onClick={()=>{}}>
+                  <img src="../../../icons/edit.svg" height={20} width={20} style={{alignSelf:'center'}}/>
+                  </IconButton>
+                
+    
+                </div></center>
+                         </td>
+                     
+                    </tr>
+                     }):
                      allData.map((dat,i)=>{
                        return  <tr className="tr-hover" style={{cursor:'pointer'}} onClick={()=>{
                          setScreen(2);setSelectedId(dat.userId);params.loadEncouters(dat.userId);setDetailData(dat);
                        }}>
                     <td className="padding" >{i+1}</td>
                     <td><p style={{alignSelf:'center',marginLeft:10,color:colors.primary10}}>{dat.firstName} {dat.lastName}</p></td>
-                     <td>kayomelese4@gmail.com</td>
+                     <td>{dat.email}</td>
                      <td>
-                             <p className={`${dat.isOnCycle?'green':'red'} w-30`}>
-                            <Typography color={dat.isOnCycle?'green':'orangered'} variant={'p'} sx={{color:dat.isOnCycle?'green !important':'orangered !important',borderColor:dat.isOnCycle?'green':'red',borderWidth:1}} >{dat.isOnCycle?"Active":"Deactive"}</Typography>
+                             <p className={`${dat.isActive?'green':'red'} w-30`}>
+                            <Typography color={dat.isActive?'green':'orangered'} variant={'p'} sx={{color:dat.isActive?'green !important':'orangered !important',borderColor:dat.isActive?'green':'red',borderWidth:1}} >{dat.isActive?"Active":"Deactive"}</Typography>
             </p>
                          </td>
-                         <td className="padding">13 Dec 2021</td>
+                         <td className="padding">{moment(dat.createdDate).format("MMM DD HH:MM")}</td>
                         
                          <td>
                            <center>
@@ -180,53 +269,48 @@ const UserScreen=(params)=>{
             <div className="w-f">
           
                 <div style={{height:500}}>
-                <div className="w-f" >
-                {encounters?
-                  <table>
-                    <tr className="eee">
-                        <th className="w-10 padding">#</th>
-                        <th className="w-20">Date added</th>
-                        <th className="w-20">Type</th>
-                        <th className="w-20">Noted</th>
-                         <th className="w-10">Status</th>
-                        
-                        <th className="w-5">Action</th>
-                    </tr>
-                   {
-                    encounters.map((dat,i)=>{
-                       return  <tr className="tr-hover" style={{cursor:'pointer'}} >
-                    <td className="padding">1</td>
-                    <td className="padding">{moment(dat.createdDate).format("MM/DD/YYYY")}</td>
-                     <td className="f-flex padding">
-                     {
-                       dat.sexType.map((da,i)=>{
-                         return <p>{da.en}</p>
-                       })
-                     }</td>
-                     <td>{dat.comment?dat.comment:"no notes"}</td>
-                     
-                         <td>
-                             <div className={`${dat.status==="protected"?'green':'red'} w-50`}>
-                            <Typography color={dat.status==="protected"?'green':'orangered'} variant={'p'} sx={{color:dat.status==="protected"?'green !important':'orangered !important',borderColor:dat.status==="protected"?'green':'red',borderWidth:1}} >{dat.status==="protected"?"Protected":"Unprotected"}</Typography>
-            </div>
-                         </td>
-                         <td>
-                           <center>
-                <div style={{alignContent:'center',justifyContent:'space-around',alignSelf:'center'}}>
-                  <IconButton onClick={()=>{}}>
-                  <img src="../../../icons/edit.svg" height={20} width={20} style={{alignSelf:'center'}}/>
-                  </IconButton>
-                
-    
-                </div></center>
-                         </td>
-                     
-                    </tr>
-                     })
-                   }
-                    </table>:params.isLoading?<LoadingData/>:null
-                }
-             
+                <div className="w-f padding" >
+
+<br/>
+<div className="w-f">
+
+<p>General Information</p>
+<br/>
+<div className="f-flex" style={{justifyContent:'space-between'}}>
+  
+<TextField label="First name" variant={'outlined'} className="w-40" disabled={true} value={detailData?detailData.firstName:null}/>
+<TextField label="Last name" variant={'outlined'} className="w-40" disabled={true} value={detailData?detailData.lastName:null}/>
+</div>
+<br/><br/>
+<div className="f-flex" style={{justifyContent:'space-between'}}>
+  
+  <TextField label="Email" variant={'outlined'} className="w-40" disabled={true} value={detailData?detailData.email:null}/>
+  
+                                 <Select 
+                value={isActive===null?detailData.isActive?detailData.isActive:false:isActive}
+                label="status"
+                id="seleted"
+                variant='outlined'
+                className="w-40"
+                onChange={(e)=>setIsActive(e.target.value)}
+  >
+        <MenuItem value={true}>Active</MenuItem>
+        <MenuItem value={false}>InActive</MenuItem>
+  </Select>
+
+  </div>
+  <br/><br/>
+  <div className="f-flex" style={{justifyContent:'space-between'}}>
+    <div className="w-10"></div>
+    <button className='w-30' onClick={()=>{
+      params.updateUser(detailData.userId,isActive)
+    }} style={{backgroundColor:colors.primary10}}>
+      {
+        params.isLoading?<CircularProgress size={15} sx={{color:'white'}}/>:"Update user"
+      }
+    </button>
+  </div>
+</div>             
                     </div>
                 </div>
               </div>
@@ -318,7 +402,8 @@ const mapDispatchTopProps=(dispatch)=>{
   return {
       setMessage:(message)=>dispatch(setDataReducer(false,message,null,null)),
       loadUsers:()=>dispatch(loadAllUsers()),
-      loadEncouters:(id)=>dispatch(loadEncouters(id))
+      loadEncouters:(id)=>dispatch(loadEncouters(id)),
+      updateUser:(id,isActive)=>dispatch(updateUser(id,isActive))
  
 
  
