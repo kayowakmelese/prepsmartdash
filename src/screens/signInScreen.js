@@ -2,7 +2,7 @@ import { Alert, Checkbox, CircularProgress, TextField } from '@mui/material'
 import * as React from 'react'
 import { Link,useNavigate  } from 'react-router-dom'
 
-import { signIn } from '../action'
+import { signIn,resetPassword } from '../action'
 import {colors} from '../styles/index'
 import {connect} from 'react-redux'
 import { Snackbar } from '@material-ui/core'
@@ -22,7 +22,9 @@ const SignInScreen=(params)=>{
             if(params.usuccess){
                 if(params.usuccess.type==="SIGNIN"){
                     // window.location.href="home"
-                    history("home")
+                    history("home/user")
+                }else if(params.usuccess.type==="RESETPASSWORD"){
+                    setScreen(2)
                 }
             }
     },[params.usuccess])
@@ -75,7 +77,7 @@ const SignInScreen=(params)=>{
             }} value={username} onChange={(e)=>setUsername(e.target.value)} variant="outlined" className="w-f border m-top"/>
             <br/><br/>
            
-           <button style={{borderRadius:5,backgroundColor:colors.primary10,padding:15,marginTop:'5%'}} className='w-f' onClick={()=>params.signIn(username,password,rememberMe)}>
+           <button style={{borderRadius:5,backgroundColor:colors.primary10,padding:15,marginTop:'5%'}} className='w-f' onClick={()=>params.resetEmail(username)}>
                {
                    params.uisLoading?<CircularProgress size={20} sx={{color:'white'}}/>:<p className='t-b t-w'>Send Password Reset Link</p>
                }
@@ -139,7 +141,8 @@ const mapStateToProps=(state)=>{
 const mapDispatchTopProps=(dispatch)=>{
     return {
 
-        signIn:(username,password,rememberme)=>dispatch(signIn(username,password,rememberme))
+        signIn:(username,password,rememberme)=>dispatch(signIn(username,password,rememberme)),
+        resetEmail:(email)=>dispatch(resetPassword(email))
     }
 }
 export default connect (mapStateToProps,mapDispatchTopProps)(SignInScreen)

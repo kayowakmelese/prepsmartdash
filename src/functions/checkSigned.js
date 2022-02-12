@@ -9,7 +9,7 @@ export const checkSigned=()=>{
 }
 export const checkSignedFromReducer=(data)=>{
     if(data){
-        if(data.accessToekn && data.refreshToken && data.userId){
+        if(data.accessToken && data.refreshToken && data.userId){
             return true;
         }else{
             return false;

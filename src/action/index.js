@@ -36,7 +36,11 @@ export const setUserInformation=(isLoading,error,success,data)=>{
         error,success,data
     }
 }
-
+export const dispatchSigned=()=>{
+    return dispatch=>{
+        dispatch(setUserInformation(false,null,null,ls('data')))
+    }
+}
 
 export const signIn=(email,password,rememberme)=>{
     return dispatch=>{
@@ -85,6 +89,15 @@ export const createAdmin=(firstname,lastname,email,password)=>{
         })
     }
 }
+export const logout=()=>{
+    return dispatch=>{
+        ls.remove("accessToken")
+        ls.remove("refreshToken")
+        ls.remove("data")
+        ls.remove("userId")
+        dispatch(setUserInformation(false,null,null,null))
+    }
+}
 export const generateCodes=(number,expdate)=>{
     return dispatch=>{
         let params={
@@ -102,6 +115,26 @@ export const generateCodes=(number,expdate)=>{
         }).catch((error)=>{
             dispatch(setDataReducer(false,handleMessages(error).message?handleMessages(error).message:handleMessages(error).error,null,null))
      
+        })
+    }
+}
+export const resetPassword = (email) => {
+
+    return dispatch => {
+        let params={
+            email:email
+        }
+        dispatch(setDataReducer(true, null, null, null))
+        axios.post(`http://${IP}:${PORT}/api/auth/forgot-password`, params).then((data) => {
+            if (data.data) {
+                console.log("server response", data.data)
+
+                dispatch(setDataReducer(false,{type:"RESETPASSWORD",message:"password sent to email"}, null, data.data))
+            }
+        }).catch((e) => {
+            console.log("error1", JSON.stringify(e));
+            console.log("messsage", handleMessages(e).error);
+            dispatch(setDataReducer(false, null, handleMessages(e).error, null))
         })
     }
 }

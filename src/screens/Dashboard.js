@@ -10,7 +10,7 @@ import SettingScreen from './DashboardComponent/SettingsTab/SettingScreen';
 import NotificationsScreen from './DashboardComponent/NotificationTab/NotificationsScreen'
 import { checkSigned, checkSignedFromReducer } from '../functions/checkSigned'
 import { connect } from 'react-redux';
-import { addBatchSecurityQuestion, addBatchSexType,createAdmin, addSecurityQuestions,generateCodes,editSecurityQuestion, addSexType, setDataReducer, editSexType,setModalReducer,deleteSexType,deleteSecurityQuestion, deleteInvitationCode } from '../action';
+import { addBatchSecurityQuestion, addBatchSexType,dispatchSigned,createAdmin,logout, addSecurityQuestions,generateCodes,editSecurityQuestion, addSexType, setDataReducer, editSexType,setModalReducer,deleteSexType,deleteSecurityQuestion, deleteInvitationCode } from '../action';
 import { CircularProgress } from '@mui/material';
 import { Box, Button, InputAdornment, Modal, Tab, Tabs, TextField,IconButton,Typography,Select,MenuItem,Menu} from '@material-ui/core';
 import DeleteScreen from '../components/deletecomponent'
@@ -61,6 +61,8 @@ const DashboardScreen=(params)=>{
 
     React.useEffect(()=>{
         setCount(0)
+        params.dispatchers()
+        history("user")
         // console.log(useMatch)
     },[])
     React.useEffect(()=>{
@@ -250,9 +252,10 @@ const DashboardScreen=(params)=>{
           
            </Typography>
            
-            <div className='f-flex' style={{alignContent:'center',alignSelf:'center'}}>
+            <div className='f-flex w-15' style={{alignContent:'center',alignSelf:'center'}}>
            
-            <div className="padding">
+            <div className="padding f-flex w-f">
+            <Avatar>{params.dataa?params.dataa.firstName.charAt(0).toUpperCase()+params.dataa.lastName.charAt(0).toUpperCase():null}</Avatar>
             <Button
         id="basic-button"
         aria-controls={open ? 'basic-menu' : undefined}
@@ -260,8 +263,7 @@ const DashboardScreen=(params)=>{
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
       >
-        Dashboard
-      </Button>
+{params.dataa?params.dataa.firstName+" "+params.dataa.lastName:null}      </Button>
       <Menu
         id="basic-menu"
         anchorEl={anchorEl}
@@ -271,11 +273,12 @@ const DashboardScreen=(params)=>{
           'aria-labelledby': 'basic-button',
         }}
       >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
-        <MenuItem onClick={handleClose}>My account</MenuItem>
-        <MenuItem onClick={handleClose}>Logout</MenuItem>
+        <MenuItem onClick={handleClose} >Profile</MenuItem>
+        <MenuItem onClick={handleClose} onClick={()=>{
+            params.logout(); history("/")
+        }}>Logout</MenuItem>
       </Menu>
-            <Avatar src={`${process.env.PUBLIC_URL}/avatar.jpg`}/>
+           
             </div>
             
                 
@@ -532,7 +535,8 @@ const mapStateToProps=(state)=>{
         modalVisible:state.ModalReducer.visible,
         screen:state.ModalReducer.screen,
         progress:state.ModalReducer.progress,
-        someValue:state.ModalReducer.someValue
+        someValue:state.ModalReducer.someValue,
+        dataa:state.userInformationReducer.data
     }
 }
 const mapDispatchTopProps=(dispatch)=>{
@@ -549,7 +553,9 @@ const mapDispatchTopProps=(dispatch)=>{
         editSecurityQuestion:(value,es,status,id)=>dispatch(editSecurityQuestion(value,es,status,id)),
         createAdmin:(firstname,lastname,email,password)=>dispatch(createAdmin(firstname,lastname,email,password)),
         generateCode:(numer,date)=>dispatch(generateCodes(numer,date)),
-        deleteInvitation:(id)=>dispatch(deleteInvitationCode(id))
+        deleteInvitation:(id)=>dispatch(deleteInvitationCode(id)),
+        logout:()=>dispatch(logout()),
+        dispatchers:()=>dispatch(dispatchSigned())
     }
 }
 export default connect(mapStateToProps,mapDispatchTopProps)(DashboardScreen)
