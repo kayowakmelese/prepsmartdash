@@ -63,6 +63,28 @@ export const signIn=(email,password,rememberme)=>{
         })
     }
 }
+export const createAdmin=(firstname,lastname,email,password)=>{
+    return dispatch=>{
+        let params={
+            firstName:firstname,
+            lastName:lastname,
+            email:email,
+            password:password
+        }
+        dispatch(setUserInformation(true,null,null,null))
+        axios.post(`http://${IP}:${PORT}/api/admin/createAdmin`,params).then((data)=>{
+            if(data.data){
+               
+                console.log("response",data.data)
+                dispatch(setUserInformation(false,null,{type:"CREATEADMIN",message:"admin Created Successfully"},data.data))
+                dispatch(loadAdmins())
+            }
+
+        }).catch((error)=>{
+                dispatch(setUserInformation(false,handleMessages(error).message?handleMessages(error).message:handleMessages(error).error,null,null))
+        })
+    }
+}
 export const generateCodes=(number)=>{
     return dispatch=>{
         let params={
@@ -130,6 +152,46 @@ export const loadAllUsers=()=>{
             if(data.data){
                 console.log("datadata",data.data)
                 dispatch(setDataReducer(false,null,{type:"ALLUSERS",message:"users loaded successfully!"},data.data.users))
+            }else{
+            
+            }
+        }).catch((error)=>{
+            dispatch(setDataReducer(false,handleMessages(error).message?handleMessages(error).message:handleMessages(error).error,null,null))
+     
+        })
+    }
+}
+export const loadMessages=()=>{
+    return dispatch=>{
+        let params={
+
+        }
+        dispatch(setDataReducer(true,null,null,null))
+        axios.get(`http://${IP}:${PORT}/api/sms/messages`,params).then((data)=>{
+            if(data.data){
+                console.log("datadata",data.data)
+                dispatch(setDataReducer(false,null,{type:"ALLMESSAGES",message:"users loaded successfully!"},data.data.messages))
+            }else{
+            
+            }
+        }).catch((error)=>{
+            dispatch(setDataReducer(false,handleMessages(error).message?handleMessages(error).message:handleMessages(error).error,null,null))
+     
+        })
+    }
+}
+export const loadAdmins=()=>{
+    return dispatch=>{
+        let params={
+
+        }
+        dispatch(setDataReducer(true,null,null,null))
+        axios.get(`http://${IP}:${PORT}/api/admin/all/admins`,params,{
+            Authorization:'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJGRU1wcm5sVnJsbjZBWWM2a0lxcGYiLCJpYXQiOjE2NDI2MjAxMTk2ODYsImV4cCI6MTY0MjcwNjUxOTY4Nn0.oebR4vLN8lhtclkNLijwdU6sfQ22ekw7q-PCPus-Jk0'
+        }).then((data)=>{
+            if(data.data){
+                console.log("datadata3",data.data)
+                dispatch(setDataReducer(false,null,{type:"ALLADMINS",message:"users loaded successfully!"},data.data))
             }else{
             
             }

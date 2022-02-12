@@ -1,6 +1,6 @@
 
 export const colors={
-    primary10:'#0C2446',
+    primary10:'#1890ff',
     primary9:'#1C3456',
     primary8:'#345179',
     primary7:'#455D7F',
@@ -13,5 +13,16 @@ export const colors={
 
 }
 export const styles={
-    navbarText:{alignSelf:'center',fontSize:13,fontWeight:'bold'}
+    navbarText:{alignSelf:'center',fontSize:13,fontWeight:'bold',color:'gray'},
+    navbarUnText:{
+        alignSelf:'center',fontSize:13,fontWeight:'bold',color:'white'
+    },
+    navbarSelected:{
+        backgroundColor:colors.primary10,
+        color:'white'
+    },
+    navbarUnSelected:{
+        color:'gray',
+        backgroundColor:'#001529'
+    }
 }

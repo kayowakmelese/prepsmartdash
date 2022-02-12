@@ -1,30 +1,30 @@
 import * as React from 'react'
 import { DataGrid } from '@mui/x-data-grid';
-import { Button, IconButton, Modal, TextField, Typography,Avatar,Box,Tabs,Tab,TabPanel ,MenuItem,Select} from '@mui/material';
+import { Button, IconButton, Modal, TextField, Typography,Avatar,Box,Tabs,Tab,TabPanel ,Select,MenuItem} from '@mui/material';
 import { colors } from '../../../styles';
 import { AddCircleRounded,ChevronLeft,Add, Search } from '@mui/icons-material';
 import { InputAdornment } from '@material-ui/core';
-import {setDataReducer,loadAllUsers,loadEncouters} from '../../../action/index'
+import {setDataReducer,loadAllUsers,loadEncouters,loadAdmins,setModalReducer} from '../../../action/index'
 import {connect} from 'react-redux'
 import LoadingData from '../../../components/loadingData'
 import moment from 'moment'
 
 
-
-const UserScreen=(params)=>{
+const AdminScreen=(params)=>{
     const [modal,setModal]=React.useState(false);
     const [modalProgress,setModalProgress]=React.useState(1);
     const [screen,setScreen]=React.useState(1);
+    const [tabvalue,setTabValue]=React.useState(1)
     const [allData,setAllData]=React.useState(null)
     const [selectedId,setSelectedId]=React.useState(null)
     const [detailData,setDetailData]=React.useState(null)
     const [encounters,setEncounters]=React.useState(null)
     React.useEffect(()=>{
-        params.loadUsers()
+        params.loadAdmins()
     },[])
     React.useEffect(()=>{
       if(params.success){
-        if(params.success.type==="ALLUSERS"){
+        if(params.success.type==="ALLADMINS"){
               setAllData(params.data)
         }else if(params.success.type==="USERENCOUNTER"){
           setEncounters(params.data)
@@ -94,9 +94,15 @@ const UserScreen=(params)=>{
         {
           screen===1?<div>
           <div className="padding w-f" style={{justifyContent:'space-between'}}>
+          <div className="f-flex" style={{justifyContent:'space-between'}}>
           <Typography variant="h5">
-            List users
+            List Admins
           </Typography>
+          <Button color={'primary'} onClick={()=>params.changeModalState(true,7,1,null)} style={{backgroundColor:colors.primary10,color:'white',alignItems:'center',alignSelf:'center'}} className="flex">
+       <p style={{fontSize:20,paddingRight:10}}> + </p> 
+        New Admin</Button>
+          </div>
+          <br/>
           <div className="f-flex " style={{justifyContent:'space-between'}}>
             <TextField label="search" placeholder="search" variant='outlined' className='w-30'/>
             <div className="f-flex w-40 " style={{justifyContent:'space-between',alignContent:'center'}}>
@@ -175,12 +181,57 @@ const UserScreen=(params)=>{
               <b>{detailData?detailData.firstName+ " "+detailData.lastName:null}</b>
             </Typography>
             </div>
-            <br/>
-           
+            <Box sx={{borderBottom:1,borderColor:colors.primary4}}>
+              <Tabs value={tabvalue} onChange={(n,e)=>{console.log("eee",e);setTabValue(e)}}  indicatorColor="primary">
+                <Tab label="Profile" value={1}/>
+                <Tab label="Encounter" value={2}/>
+              </Tabs>
+              
+            </Box>
             <div className="w-f">
-          
+              {
+                tabvalue===1?
+                <div className='border m-top padding radius w-50'>
+                  <div className="f-flex" style={{justifyContent:'space-between'}}>
+                    <p style={{alignSelf:'center'}}>Personal Information</p>
+                    <div className="f-flex">
+                      <Button variant={'text'}>Edit</Button>
+                      <Button variant={'text'} sx={{color:'black'}}>Reset password</Button>
+                      <Button variant={'text'} sx={{color:'red'}}>Delete</Button>
+                    </div>
+                   
+                  </div>
+                  <div className="m-top w-70">
+                  <div className='padding'>
+                    
+                  </div>
+                      <div className="f-flex b-bottom" style={{justifyContent:'space-between'}}>
+                      <p>Full name</p>
+                      <p><b>{detailData?detailData.firstName+ " "+detailData.lastName:null}</b></p>
+                      </div>
+                      <div className="f-flex b-bottom" style={{justifyContent:'space-between'}}>
+                      <p>Email</p>
+                      <p><b>{detailData?detailData.email:null}</b></p>
+                      </div>
+                      <div className="f-flex b-bottom" style={{justifyContent:'space-between'}}>
+                      <p>Phone number</p>
+                      <p><b>{detailData?detailData.phoneNumber:null}</b></p>
+                      </div>
+                      <div className="f-flex b-bottom" style={{justifyContent:'space-between'}}>
+                      <p>Birthplace</p>
+                      <p><b>Ambo</b></p>
+                      </div>
+                      <div className="f-flex b-bottom" style={{justifyContent:'space-between'}}>
+                      <p>Location</p>
+                      <p><b>Addis abeba</b></p>
+                      </div>
+
+                      
+                    </div>
+                </div>:
+                tabvalue===2?
                 <div style={{height:500}}>
-                <div className="w-f" >
+                <div className="w-f" style={{overflowX:'scroll'}}>
                 {encounters?
                   <table>
                     <tr className="eee">
@@ -228,7 +279,8 @@ const UserScreen=(params)=>{
                 }
              
                     </div>
-                </div>
+                </div>:null
+              }
               </div>
            
           </div>
@@ -317,12 +369,14 @@ const mapStateToProps=(state)=>{
 const mapDispatchTopProps=(dispatch)=>{
   return {
       setMessage:(message)=>dispatch(setDataReducer(false,message,null,null)),
-      loadUsers:()=>dispatch(loadAllUsers()),
-      loadEncouters:(id)=>dispatch(loadEncouters(id))
+      loadAdmins:()=>dispatch(loadAdmins()),
+      loadEncouters:(id)=>dispatch(loadEncouters(id)),
+      changeModalState:(visible,screen,progress,someValue)=>dispatch(setModalReducer(visible,screen,progress,someValue))
+
  
 
  
 
   }
 }
-export default connect(mapStateToProps,mapDispatchTopProps)(UserScreen)
+export default connect(mapStateToProps,mapDispatchTopProps)(AdminScreen)

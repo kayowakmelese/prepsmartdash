@@ -33,6 +33,11 @@ html {
     background-color: #eee;
 }
 
+.MuiInputLabel-outlined {
+    background-color: white;
+    padding: 0 10px;
+}
+
 .bv {
     margin: 0px !important;
     background-color: 'white'
@@ -276,7 +281,6 @@ p {
     margin: 0px;
     padding: 0px;
     letter-spacing: 0pt;
-    color: #312f97;
 }
 
 .m {
@@ -584,19 +588,19 @@ h2 {
 }
 
 .css-7elnev-MuiInputBase-input-MuiOutlinedInput-input {
-    border: 2px solid #312f97 !important;
+    border: 2px solid rgba(128, 128, 128, 0.275) !important;
 }
 
 .css-7elnev-MuiInputBase-input-MuiOutlinedInput-input:focus {
-    border: 2px solid #312f9700 !important
+    border: 2px solid white !important
 }
 
 .css-xvecyq-MuiButtonBase-root-MuiTab-root.Mui-selected {
-    color: #0C2446;
+    color: #1890ff;
 }
 
 .MuiTab-textColorInherit.Mui-selected {
-    color: #0C2446;
+    color: #1890ff;
 }
 
 .w-70 {
@@ -625,7 +629,7 @@ h2 {
 }
 
 input {
-    padding: 15px;
+    padding: 10px;
     outline: none;
     border-radius: 5px;
     width: 70%;

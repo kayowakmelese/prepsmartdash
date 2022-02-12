@@ -16,6 +16,12 @@ import MemberShip from './screens/DashboardComponent/Dashboard/MembershipScreen'
 import TeamScreen from './screens/DashboardComponent/TeamTabs/TeamScreen';
 import SettingScreen from './screens/DashboardComponent/SettingsTab/SettingScreen';
 import NotificationsScreen from './screens/DashboardComponent/NotificationTab/NotificationsScreen';
+import GenerateCodes from './screens/DashboardComponent/SettingsTab/GenerateCodes'
+import SecurityQuestionScreen from './screens/DashboardComponent/SettingsTab/SecurityQuestions'
+import SexTypeScreen from './screens/DashboardComponent/SettingsTab/SexTypeTab'
+import AdminScreen from './screens/DashboardComponent/Admins/AdminScreen'
+import MessageScreen from './screens/DashboardComponent/messages/index'
+
 function App(props) {
   React.useEffect(()=>{
     props.setData();
@@ -32,6 +38,14 @@ function App(props) {
           <Route path={'team'} element={<TeamScreen/>}/>
           <Route path={'settings'} element={<SettingScreen/>} />
           <Route path={'notifications'} element={<NotificationsScreen/>} />
+          <Route path={'invitations'} element={<GenerateCodes/>}/>
+          <Route path={'SecurityQuestion'} element={<SecurityQuestionScreen/>}/>
+          <Route path={'Sextype'} element={<SexTypeScreen/>}/>
+          <Route path={'admins'} element={<AdminScreen/>}/> 
+          
+          <Route path={'messages'} element={<MessageScreen/>}/>
+
+
         </Route>
       </Routes>
       </React.Fragment>

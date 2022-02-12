@@ -14,6 +14,7 @@ const SignInScreen=(params)=>{
     const [password,setPassword]=React.useState(null)
     const [rememberMe,setRememberMe]=React.useState(true)
     const [showAlert,setShowAlert]=React.useState(false);
+    const [screen,setScreen]=React.useState(2);
       let history = useNavigate();
 
     
@@ -44,25 +45,53 @@ const SignInScreen=(params)=>{
         }
         setTimeout(()=>setShowAlert(false),3000);
     },[params.usuccess,params.uerror])
-    return <div style={{marginTop:'5%',marginLeft:'10%',height:'80%',position:'absolute',top:0,left:0,width:'80%'}} className='flex b-s'>
-       
-       <div style={{backgroundColor:colors.primary10}} className='w-50'></div>
-       <div className='white w-50 padding'>
+    return <div className="" style={{marginTop:'10%'}}>
+       <center>
+       {
+           screen===2? <img src={`${process.env.PUBLIC_URL}/Logo-large.svg`} height={40} className="padding"/>:
+           <h1 className='padding'><b>Forgot Password?</b></h1>
+       }
+      
+       <div className='white w-f padding w-30 padding b-s'>
        <Snackbar  anchorOrigin={{ vertical: 'top',horizontal: 'right'}} open={showAlert}  autoHideDuration={6000}>
          {params.usuccess? <Alert>{params.usuccess.message}</Alert>:
          <Alert severity='error'>{params.uerror}</Alert>
          }  
        </Snackbar>
-            <h2 style={{marginTop:'10%',textAlign:'center',color:colors.primary4}}>
-                Admin panel
-            </h2>
+       <div className="w-f radius">
+           
             <center>
-            <div className='w-70' style={{textAlign:'left'}}>
+            {
+                screen===1? <div className='w-f' style={{textAlign:'left'}}>
 {/*             
             <p className=' t-l'>Email</p>
             <input type={'text'} placeholder='email' className='w-f'/> */}
             <br/><br/>
-            <TextField label="email" type="email" value={username} onChange={(e)=>setUsername(e.target.value)} variant="outlined" className="w-f border"/>
+            <p style={{color:'gray',fontSize:15}} className="">Enter your email address and we’ll send you a link to reset your password.
+
+</p>
+            <TextField label="email" type="email"  onErrorCapture={()=>{
+                console.log("your email is invalid") 
+            }} value={username} onChange={(e)=>setUsername(e.target.value)} variant="outlined" className="w-f border m-top"/>
+            <br/><br/>
+           
+           <button style={{borderRadius:5,backgroundColor:colors.primary10,padding:15,marginTop:'5%'}} className='w-f' onClick={()=>params.signIn(username,password,rememberMe)}>
+               {
+                   params.uisLoading?<CircularProgress size={20} sx={{color:'white'}}/>:<p className='t-b t-w'>Send Password Reset Link</p>
+               }
+               
+           </button>
+           
+          
+            </div>:
+            <div className='w-f' style={{textAlign:'left'}}>
+{/*             
+            <p className=' t-l'>Email</p>
+            <input type={'text'} placeholder='email' className='w-f'/> */}
+            <br/><br/>
+            <TextField label="email" type="email" onErrorCapture={()=>{
+                console.log("your email is invalid") 
+            }} value={username} onChange={(e)=>setUsername(e.target.value)} variant="outlined" className="w-f border"/>
             <br/><br/>
             <TextField label="password" type="password" value={password} onChange={(e)=>setPassword(e.target.value)} variant="outlined" className="w-f border"/>
             {/* <p className='mtop  t-l' style={{marginTop:'10%'}}>Password</p>
@@ -70,32 +99,27 @@ const SignInScreen=(params)=>{
            <div className='f-flex' style={{justifyContent:'space-between'}}>
                <div className='f-flex' style={{alignContent:'center'}}>
                <Checkbox checked={rememberMe} onChange={(change)=>setRememberMe(rememberMe?false:true)}/>
-                   <p style={{alignSelf:'center'}}>Remember me</p>
+                   <p style={{alignSelf:'center',fontSize:12,color:'black'}}>Remember me</p>
                </div>
-               <p style={{alignSelf:'center'}}>Forgot your password?</p>
+               <p style={{alignSelf:'center',fontSize:12,color:'#1890ff',cursor:'pointer'}} onClick={()=>setScreen(1)}>Forgot your password?</p>
            </div>
            
-           <button style={{borderRadius:50,backgroundColor:colors.primary10,padding:15,marginTop:'5%'}} className='w-f' onClick={()=>params.signIn(username,password,rememberMe)}>
+           <button style={{borderRadius:5,backgroundColor:colors.primary10,padding:15,marginTop:'5%'}} className='w-f' onClick={()=>params.signIn(username,password,rememberMe)}>
                {
                    params.uisLoading?<CircularProgress size={20} sx={{color:'white'}}/>:<p className='t-b t-w'>Log in</p>
                }
                
            </button>
            
-           <div className='f-flex padding' style={{justifyContent:'space-between'}}>
-               <div className='f-flex'>
-                   <p>Quick Signin</p>
-                   <img src='google.png' width={'20'} height={'20'} style={{borderRadius:50,marginLeft:10}}/>
-                   <img src='google.png' width={'20'} height={'20'} style={{borderRadius:50,marginLeft:10}}/>
-                   <img src='google.png' width={'20'} height={'20'} style={{borderRadius:50,marginLeft:10}}/>
-               </div>
-               <p className='t-b'>Sign Up</p>
-           </div>
+          
             </div>
-            </center>
-            
-       </div>
+            }
            
+            </center>
+</div>            
+       </div>
+       <p style={{color:colors.primary10,cursor:'pointer'}} onClick={()=>setScreen(2)} className="padding">Sign in</p>
+           </center>
        
     </div>
 
