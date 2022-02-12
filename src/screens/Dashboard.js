@@ -31,7 +31,7 @@ import EncounterScreen from './DashboardComponent/UserTabs/EncounterTab'
 const DashboardScreen=(params)=>{ 
     const [path,setPath]=React.useState(null) 
     const [showAlert,setShowAlert]=React.useState(false);
-    const [active,setActive]=React.useState(2);
+    const [active,setActive]=React.useState(1);
     const [tabvalue,setTabValue]=React.useState(1)
     const [modal,setModal]=React.useState(false)
     const [modalScreen,setModalScreen]=React.useState(4)
@@ -181,64 +181,64 @@ const DashboardScreen=(params)=>{
            <b>Ripe Wipe</b>
            </Typography>
             <Link to={'user'} onClick={()=>setActive(1)} >
-                        <div className="padding f-flex" style={active===1?styles.navbarSelected:styles.navbarUnSelected}>
-              <PersonOutlined/>
+                        <div className=" f-flex" style={active===1?styles.navbarSelected:styles.navbarUnSelected}>
+              <PersonOutlined className="padding"/>
                <Typography variant='p' color={'primary'} style={active===1?styles.navbarUnText:styles.navbarText}>
                     Users
                 </Typography>
             </div>
             </Link>
             <Link to={'admins'} onClick={()=>setActive(2)} >
-                        <div className="padding f-flex" style={active===2?styles.navbarSelected:styles.navbarUnSelected} >
-                       <PeopleOutlined/>
+                        <div className=" f-flex" style={active===2?styles.navbarSelected:styles.navbarUnSelected} >
+                       <PeopleOutlined className="padding"/>
                               <Typography variant='p' color={'primary'} style={active===2?styles.navbarUnText:styles.navbarText}>
                     Admins
                 </Typography>
             </div>
             </Link>
             <Link to={'invitations'} onClick={()=>setActive(3)} >
-                        <div className="padding f-flex" style={active===3?styles.navbarSelected:styles.navbarUnSelected} >
-                        <MailOutlined/>
+                        <div className=" f-flex" style={active===3?styles.navbarSelected:styles.navbarUnSelected} >
+                        <MailOutlined className="padding"/>
                 <Typography variant='p' color={'primary'} style={active===3?styles.navbarUnText:styles.navbarText}>
                     Invitations
                 </Typography>
             </div>
             </Link>
             <Link to={'encounters'} onClick={()=>setActive(4)} >
-                        <div className="padding f-flex" style={active===4?styles.navbarSelected:styles.navbarUnSelected} >
-              <FavoriteBorderOutlined/>
+                        <div className=" f-flex" style={active===4?styles.navbarSelected:styles.navbarUnSelected} >
+              <FavoriteBorderOutlined className="padding"/>
                 <Typography variant='p' color={'primary'} style={active===4?styles.navbarUnText:styles.navbarText}>
                     Encounters
                 </Typography>
             </div>
             </Link>
             <Link to={'SecurityQuestion'} onClick={()=>setActive(5)} >
-                        <div className="padding f-flex" style={active===5?styles.navbarSelected:styles.navbarUnSelected} >
-             <GppGoodOutlined/>
+                        <div className=" f-flex" style={active===5?styles.navbarSelected:styles.navbarUnSelected} >
+             <GppGoodOutlined className="padding"/>
                 <Typography variant='p' color={'primary'} style={active===5?styles.navbarUnText:styles.navbarText}>
                     Security questions
                 </Typography>
             </div>
             </Link>
             <Link to={'Sextype'} onClick={()=>setActive(6)} >
-                        <div className="padding f-flex" style={active===6?styles.navbarSelected:styles.navbarUnSelected} >
-               <SentimentSatisfiedOutlined/>
+                        <div className=" f-flex" style={active===6?styles.navbarSelected:styles.navbarUnSelected} >
+               <SentimentSatisfiedOutlined className="padding"/>
                 <Typography variant='p' color={'primary'} style={active===6?styles.navbarUnText:styles.navbarText}>
                     Sex types
                 </Typography>
             </div>
             </Link>
             <Link to={'user'} onClick={()=>setActive(7)} >
-                        <div className={`padding f-flex`} style={active===7?styles.navbarSelected:styles.navbarUnSelected} >
-                <ChatOutlined/>
+                        <div className={` f-flex`} style={active===7?styles.navbarSelected:styles.navbarUnSelected} >
+                <ChatOutlined className="padding"/>
                 <Typography variant='p' color={'primary'} style={active===7?styles.navbarUnText:styles.navbarText}>
                     Dose messages
                 </Typography>
             </div>
             </Link>
             <Link to={'messages'} onClick={()=>setActive(8)} >
-                        <div className={`padding f-flex`} style={active===8?styles.navbarSelected:styles.navbarUnSelected} >
-                <ChatOutlined/>
+                        <div className={` f-flex`} style={active===8?styles.navbarSelected:styles.navbarUnSelected} >
+                <ChatOutlined className="padding"/>
                 <Typography variant='p' color={'primary'} style={active===8?styles.navbarUnText:styles.navbarText}>
                     Messages
                 </Typography>

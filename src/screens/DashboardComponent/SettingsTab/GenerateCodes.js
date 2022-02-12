@@ -70,11 +70,11 @@ const GenerateCodes=(params)=>{
                 <td className="f-flex padding" style={{alignSelf:'center',justifyContent:'center'}}>
                 <IconButton onClick={()=>{navigator.clipboard.writeText(dat.invitationCode);params.setMessage("copied invitation code successfully!")}}>
 
-                <img src='../../icons/edit.svg' height={20} width={20}/>
+                <img src={`${process.env.PUBLIC_URL}/icons/edit.svg`} height={20} width={20}/>
                 </IconButton>
                 <IconButton onClick={()=>{params.changeModalState(true,8,1,{id:dat.invitationCode,value:dat.invitationCode});params.setMessage("copied invitation code successfully!")}}>
 
-<img src='../../icons/delete.svg' height={20} width={20}/>
+<img src={`${process.env.PUBLIC_URL}/icons/delete.svg`} height={20} width={20}/>
 </IconButton>
                 </td>
             </tr>:null

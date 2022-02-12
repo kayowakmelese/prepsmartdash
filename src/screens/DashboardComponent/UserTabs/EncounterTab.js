@@ -154,7 +154,7 @@ const EncounterScreen=(params)=>{
                            <center>
                 <div style={{alignContent:'center',justifyContent:'space-around',alignSelf:'center'}}>
                   <IconButton onClick={()=>{}}>
-                  <img src="../../../icons/edit.svg" height={20} width={20} style={{alignSelf:'center'}}/>
+                  <img src={`${process.env.PUBLIC_URL}/icons/edit.svg`} height={20} width={20} style={{alignSelf:'center'}}/>
                   </IconButton>
                 
     
@@ -181,7 +181,7 @@ const EncounterScreen=(params)=>{
                            <center>
                 <div style={{alignContent:'center',justifyContent:'space-around',alignSelf:'center'}}>
                   <IconButton onClick={()=>{}}>
-                  <img src="../../../icons/edit.svg" height={20} width={20} style={{alignSelf:'center'}}/>
+                  <img src={`${process.env.PUBLIC_URL}/icons/edit.svg`} height={20} width={20} style={{alignSelf:'center'}}/>
                   </IconButton>
                 
     
@@ -245,7 +245,7 @@ const EncounterScreen=(params)=>{
                            <center>
                 <div style={{alignContent:'center',justifyContent:'space-around',alignSelf:'center'}}>
                   <IconButton onClick={()=>{}}>
-                  <img src="../../../icons/edit.svg" height={20} width={20} style={{alignSelf:'center'}}/>
+                  <img src={`${process.env.PUBLIC_URL}/icons/edit.svg`} height={20} width={20} style={{alignSelf:'center'}}/>
                   </IconButton>
                 
     
@@ -276,7 +276,7 @@ const EncounterScreen=(params)=>{
                    </Typography>
                    <br/>
                    <div style={{position:'relative',width:120,marginTop:'10%',marginBottom:'10%'}}>
-                   <img src="../../../icons/person.svg" height={90} width={90} style={{backgroundColor:colors.primary1,padding:10,borderRadius:90}}/>
+                   <img src={`${process.env.PUBLIC_URL}/icons/person.svg`} height={90} width={90} style={{backgroundColor:colors.primary1,padding:10,borderRadius:90}}/>
                   <IconButton style={{position:'absolute',bottom:0,right:0,backgroundColor:colors.primary10}} size="large">
                       <Add sx={{color:'white'}} />
                   </IconButton>
@@ -306,7 +306,7 @@ const EncounterScreen=(params)=>{
                    </Typography>
                    <br/>
                    <div style={{position:'relative',width:120,marginTop:'10%',marginBottom:'10%'}}>
-                   <img src="../../../icons/person.svg" height={90} width={90} style={{backgroundColor:colors.primary1,padding:10,borderRadius:90}}/>
+                   <img src={`${process.env.PUBLIC_URL}/icons/person.svg`} height={90} width={90} style={{backgroundColor:colors.primary1,padding:10,borderRadius:90}}/>
                   <IconButton style={{position:'absolute',bottom:0,right:0,backgroundColor:colors.primary10}} size="large">
                       <Add sx={{color:'white'}} />
                   </IconButton>

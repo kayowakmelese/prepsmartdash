@@ -48,9 +48,9 @@ const SecurityQuestionScreen=(params)=>{
             <td>Active</td>
             <td>{moment().format('MMM DD ,HH:MM a')}</td>
             <td className="f-flex padding" style={{alignSelf:'center',justifyContent:'center'}}>
-                <IconButton onClick={()=>{params.changeModalState(true,4,2,{id:dat.id,value:dat.value})}}><img src='../../icons/edit.svg' height={20} width={20}/></IconButton>
+                <IconButton onClick={()=>{params.changeModalState(true,4,2,{id:dat.id,value:dat.value})}}><img src={`${process.env.PUBLIC_URL}/icons/edit.svg`} height={20} width={20}/></IconButton>
 
-                <IconButton onClick={()=>{params.changeModalState(true,6,3,{id:dat.id,value:dat.value})}}><img src='../../icons/delete.svg' height={20} width={20}/></IconButton>
+                <IconButton onClick={()=>{params.changeModalState(true,6,3,{id:dat.id,value:dat.value})}}><img src={`${process.env.PUBLIC_URL}/icons/delete.svg`} height={20} width={20}/></IconButton>
             </td>
         </tr>
             })

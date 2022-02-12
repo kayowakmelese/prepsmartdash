@@ -78,11 +78,11 @@ const UserScreen=(params)=>{
             <center>
             <div style={{alignContent:'center',justifyContent:'space-around',alignSelf:'center'}}>
               <IconButton onClick={()=>{setModal(true);setModalProgress(2)}}>
-              <img src="../../../icons/edit.svg" height={20} width={20} style={{alignSelf:'center'}}/>
+              <img src={`${process.env.PUBLIC_URL}/icons/edit.svg`} height={20} width={20} style={{alignSelf:'center'}}/>
               </IconButton>
               <IconButton>
 
-              <img src="../../../icons/delete.svg" height={20} width={20} style={{alignSelf:'center'}}/>
+              <img src={`${process.env.PUBLIC_URL}/icons/delete.svg`} height={20} width={20} style={{alignSelf:'center'}}/>
               </IconButton>
 
             </div></center>

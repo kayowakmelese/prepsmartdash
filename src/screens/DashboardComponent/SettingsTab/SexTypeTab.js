@@ -47,9 +47,9 @@ const SexTypeScreen=(params)=>{
             <td>Active</td>
             <td>{moment(dat.createdDate).format("MMMM DD ,HH:MM a")}</td>
             <td className="f-flex padding" style={{alignSelf:'center',justifyContent:'center'}}>
-                <IconButton onClick={()=>{params.changeModalState(true,1,2,{value:dat.en,es:dat.es,id:dat.id})}}><img src='../../icons/edit.svg' height={20} width={20}/></IconButton>
+                <IconButton onClick={()=>{params.changeModalState(true,1,2,{value:dat.en,es:dat.es,id:dat.id})}}><img src={`${process.env.PUBLIC_URL}/icons/edit.svg`} height={20} width={20}/></IconButton>
 
-                <IconButton onClick={()=>{params.changeModalState(true,2,3,{value:dat.en,es:dat.es,id:dat.id})}}><img src='../../icons/delete.svg' height={20} width={20}/></IconButton>
+                <IconButton onClick={()=>{params.changeModalState(true,2,3,{value:dat.en,es:dat.es,id:dat.id})}}><img src={`${process.env.PUBLIC_URL}/icons/delete.svg`} height={20} width={20}/></IconButton>
             </td>
         </tr>
             })
