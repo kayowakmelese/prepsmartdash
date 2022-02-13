@@ -586,7 +586,11 @@ h2 {
 }
 
 .css-7elnev-MuiInputBase-input-MuiOutlinedInput-input {
-    border: 2px solid #312f97 !important;
+    border: 2px solid rgba(128, 128, 128, 0.275) !important;
+}
+
+.MuiOutlinedInput-input {
+    border: 2px solid rgba(128, 128, 128, 0.275) !important;
 }
 
 .css-7elnev-MuiInputBase-input-MuiOutlinedInput-input:focus {
@@ -650,6 +654,11 @@ input {
 .bubble-l {
     background-color: rgb(8, 8, 255) !important;
     color: white !important
+}
+
+.MuiInputLabel-outlined {
+    background: white;
+    padding: 0px 5px !important;
 }
 
 .css-4z5eki {
