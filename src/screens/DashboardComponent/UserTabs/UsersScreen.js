@@ -11,6 +11,7 @@ import moment from 'moment'
 import {DesktopDatePicker} from '@mui/lab';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DateAdapter from '@mui/lab/AdapterMoment';
+import NoItemFound from '../../../components/NoItemFound';
 
 
 const UserScreen=(params)=>{
@@ -116,7 +117,7 @@ const UserScreen=(params)=>{
         let computed=[];
         if(value!=="All"){
         for(var i=0;i<allData.length;i++){
-          if(allData[i].isOnCycle+''===value){
+          if(allData[i].isActive+''===value){
             computed.push(allData[i])
           }
         }
@@ -152,6 +153,8 @@ const UserScreen=(params)=>{
               <DesktopDatePicker
           label="minimum date"
           inputFormat="MM/dd/yyyy"
+          
+          className="border"
           value={minDate}
           onChange={setMinDate}
           renderInput={(params) => <TextField {...params} />}/>
@@ -160,6 +163,7 @@ const UserScreen=(params)=>{
           label="maximum date"
           inputFormat="MM/dd/yyyy"
           value={maxDate}
+          className="border"
           onChange={setMaxDate}
           renderInput={(params) => <TextField {...params} />}
        />
@@ -183,7 +187,7 @@ const UserScreen=(params)=>{
         <br/>
             <div className="w-f" >
             {
-              allData?<table className="w-f ">
+              allData && allData.length>0?<table className="w-f ">
                     <tr className="eee">
                         <th className="w-5 padding">#</th>
                         <th className="w-10">Name</th>
@@ -203,7 +207,7 @@ const UserScreen=(params)=>{
                      <td>{dat.email}</td>
                      <td>
                              <p className={`${dat.isActive?'green':'red'} w-30`}>
-                            <Typography color={dat.isActive?'green':'orangered'} variant={'p'} sx={{color:dat.isActive?'green !important':'orangered !important',borderColor:dat.isOnCycle?'green':'red',borderWidth:1}} >{dat.isActive?"Active":"Deactive"}</Typography>
+                            <Typography color={dat.isActive?'green':'orangered'} variant={'p'} sx={{color:dat.isActive?'green !important':'orangered !important',borderColor:dat.isActive?'green':'red',borderWidth:1}} >{dat.isActive?"Active":"Deactive"}</Typography>
             </p>
                          </td>
                          <td className="padding">{moment(dat.createdDate).format("MMM DD HH:MM")}</td>
@@ -212,7 +216,7 @@ const UserScreen=(params)=>{
                            <center>
                 <div style={{alignContent:'center',justifyContent:'space-around',alignSelf:'center'}}>
                   <IconButton onClick={()=>{}}>
-                  <img src="../../../icons/edit.svg" height={20} width={20} style={{alignSelf:'center'}}/>
+                  <img src={`${process.env.PUBLIC_URL}/icons/edit.svg`} height={20} width={20} style={{alignSelf:'center'}}/>
                   </IconButton>
                 
     
@@ -239,7 +243,7 @@ const UserScreen=(params)=>{
                            <center>
                 <div style={{alignContent:'center',justifyContent:'space-around',alignSelf:'center'}}>
                   <IconButton onClick={()=>{}}>
-                  <img src="../../../icons/edit.svg" height={20} width={20} style={{alignSelf:'center'}}/>
+                  <img src={`${process.env.PUBLIC_URL}/icons/edit.svg`} height={20} width={20} style={{alignSelf:'center'}}/>
                   </IconButton>
                 
     
@@ -249,7 +253,7 @@ const UserScreen=(params)=>{
                     </tr>
                      })
                    }
-                    </table>:params.isLoading?<LoadingData/>:null
+                    </table>:params.isLoading?<LoadingData/>:<NoItemFound/>
             }
              
                     </div>

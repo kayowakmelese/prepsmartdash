@@ -10,7 +10,7 @@ import SettingScreen from './DashboardComponent/SettingsTab/SettingScreen';
 import NotificationsScreen from './DashboardComponent/NotificationTab/NotificationsScreen'
 import { checkSigned, checkSignedFromReducer } from '../functions/checkSigned'
 import { connect } from 'react-redux';
-import { addBatchSecurityQuestion, addBatchSexType,dispatchSigned,createAdmin,logout, addSecurityQuestions,generateCodes,editSecurityQuestion, addSexType, setDataReducer, editSexType,setModalReducer,deleteSexType,deleteSecurityQuestion, deleteInvitationCode } from '../action';
+import { addBatchSecurityQuestion, addBatchSexType,loadAllUsers,deleteDoseMessage,editDoseMessage,addDoseMessage,promoteUser,dispatchSigned,createAdmin,logout, addSecurityQuestions,generateCodes,editSecurityQuestion, addSexType, setDataReducer, editSexType,setModalReducer,deleteSexType,deleteSecurityQuestion, deleteInvitationCode } from '../action';
 import { CircularProgress } from '@mui/material';
 import { Box, Button, InputAdornment, Modal, Tab, Tabs, TextField,IconButton,Typography,Select,MenuItem,Menu} from '@material-ui/core';
 import DeleteScreen from '../components/deletecomponent'
@@ -25,6 +25,8 @@ import AdminScreen from './DashboardComponent/Admins/AdminScreen'
 import MessageScreen from './DashboardComponent/messages/index'
 import moment from 'moment'
 import EncounterScreen from './DashboardComponent/UserTabs/EncounterTab'
+import Autocomplete from '@mui/material/Autocomplete';
+import DoseMessageScreen from './DashboardComponent/SettingsTab/DoseMessageTab'
 
 
 
@@ -49,6 +51,8 @@ const DashboardScreen=(params)=>{
     const [email,setEmail]=React.useState("")
     const [isActive,setIsActive]=React.useState(true)
     const [expDate,setExpDate]=React.useState(null)
+    const [userDatas,setUserDatas]=React.useState(null)
+    const [selected,setSelected]=React.useState(null)
       let history = useNavigate();
       const [anchorEl, setAnchorEl] = React.useState(null);
       const open = Boolean(anchorEl);
@@ -66,6 +70,10 @@ const DashboardScreen=(params)=>{
         // console.log(useMatch)
     },[])
     React.useEffect(()=>{
+        console.log("fault",selected)
+        // console.log(useMatch)
+    },[selected])
+    React.useEffect(()=>{
         if(checkSigned() || checkSignedFromReducer(params.udata)){
             // window.location.href="/home"
 
@@ -80,8 +88,10 @@ const DashboardScreen=(params)=>{
                 if(params.success ){
                     if(params.success.message){setShowAlert(true)}
                 }else{
+                    if(params.error.length>0){
+                        setShowAlert(true);
 
-                    setShowAlert(true);
+                    }
                 }
             }else{
                 setShowAlert(false);
@@ -106,6 +116,12 @@ const DashboardScreen=(params)=>{
             setModalScreen(7)
         }else if(params.screen===8){
             setModalScreen(8)
+        }else if(params.screen===9){
+            setModalScreen(9)
+        }else if(params.screen===10){
+            setModalScreen(10)
+        }else if(params.screen===11){
+            setModalScreen(11)
         }else{
             setModalScreen(2);
         }
@@ -114,6 +130,9 @@ const DashboardScreen=(params)=>{
     React.useEffect(()=>{
         if(params.someValue){
             setId(params.someValue.id)
+            if(params.someValue.status !==null){
+                setIsActive(params.someValue.status)
+            }
         }
     },[params.someValue])
     React.useEffect(()=>{
@@ -130,13 +149,26 @@ const DashboardScreen=(params)=>{
             }else if(params.success.type==="EDITEDSEXTYPE"){
                 setChanged(null)
                 params.changeModalState(false,1,1,null)
-            }else if(params.success.type==="EDITSECURITYQUESTION" || params.success.type==="DELETECODE"){
+            }else if(params.success.type==="EDITSECURITYQUESTION" || params.success.type==="DELETECODE" ||  params.success.type==="PROMOTEUSER" ||  params.success.type==="DELETEDOSE" || params.success.type==="ADDDOSEMESSAGE"){
                 setChanged(null)
                 params.changeModalState(false,1,1,null)
+            }else if(params.success.type==="ALLUSERS"){
+               PutUsers(params.data);
             }
         }
     },[params.success])
-   
+   const PutUsers=(data)=>{
+       let arr=[]
+       let obj=null
+       for(var i=0;i<data.length;i++){
+             obj={
+                label:data[i].firstName+" "+data[i].lastName+" - "+data[i].email,id:data[i].userId
+                
+            }
+            arr.push(obj)
+       }
+       setUserDatas(arr)
+   }
     React.useEffect(()=>{
         console.log("modalstate",modal)
         params.changeModalState(modal,1,1,null)
@@ -149,7 +181,9 @@ const DashboardScreen=(params)=>{
         setBatch(arr)
     },[count])
     React.useEffect(()=>{
-        
+        if(batch.length<=0){
+            setCount(1)
+        }
         console.log("batch",batch)
     },[batch])
     React.useEffect(()=>{
@@ -228,7 +262,7 @@ const DashboardScreen=(params)=>{
                 </Typography>
             </div>
             </Link>
-            <Link to={'user'} onClick={()=>setActive(7)} >
+            <Link to={'dosemessages'} onClick={()=>setActive(7)} >
                         <div className={` f-flex`} style={active===7?styles.navbarSelected:styles.navbarUnSelected} >
                 <ChatOutlined className="padding"/>
                 <Typography variant='p' color={'primary'} style={active===7?styles.navbarUnText:styles.navbarText}>
@@ -255,7 +289,7 @@ const DashboardScreen=(params)=>{
             <div className='f-flex w-15' style={{alignContent:'center',alignSelf:'center'}}>
            
             <div className="padding f-flex w-f">
-            <Avatar>{params.dataa?params.dataa.firstName.charAt(0).toUpperCase()+params.dataa.lastName.charAt(0).toUpperCase():null}</Avatar>
+            <Avatar>{params.dataa?params.dataa.firstName?params.dataa.firstName.charAt(0).toUpperCase():null+params.dataa?params.dataa.lastName?params.dataa.lastName.charAt(0).toUpperCase():null:null:null}</Avatar>
             <Button
         id="basic-button"
         aria-controls={open ? 'basic-menu' : undefined}
@@ -300,6 +334,7 @@ const DashboardScreen=(params)=>{
                 <Route path={'admins'} element={<AdminScreen/>}/> 
                 <Route path={'messages'} element={<MessageScreen/>}/>
                 <Route path={'encounters'} element={<EncounterScreen/>}/>
+                <Route path={'dosemessages'} element={<DoseMessageScreen/>}/>
                 
             </Routes>
             </div>
@@ -490,20 +525,20 @@ const DashboardScreen=(params)=>{
 
           <div className="f-flex m-top" style={{ justifyContent: 'right' }}>
                     <Button variant={'text'} className="mrit" onClick={() => params.changeModalState(false,1,1,null)}  style={{marginRight:'5%', padding: '0% 10%',color:colors.primary10 }}>Cancel</Button>
-                    <button variant={'contained'} onClick={()=>{if(name.trim().length>0 && secondName.trim().length>0 && (password.trim().length>=6) && (password.trim()===confirmPassword.trim()) && ValidateEmail(email) ){
+                    <button variant={'contained'} onClick={
+                        ()=>{if(name.trim().length>0 && secondName.trim().length>0 && (password.trim().length>=6) && (password.trim()===confirmPassword.trim()) && ValidateEmail(email) ){
                               console.log("viral")
                                 if(password.trim()!=confirmPassword.trim()){
                                 params.setMessage("Password and confirm password does not match")
                                 }else{
+                                    console.log("i got here")
                                     params.createAdmin(name,secondName,password,email)
                                 }
-                              
-                    
-                    }else{
+                                }else{
                         params.setMessage("Fill all the information to continue")
                     }
                      }
-                        } disableElevation style={{ backgroundColor: colors.primary10,color:'white', padding: '3% 10%' }}>{
+                        }  style={{ backgroundColor: colors.primary10,color:'white', padding: '3% 10%' }}>{
                        params.isLoading?<CircularProgress size={15} sx={{color:'white'}}/>:params.progress===1?"ADD":"SAVE"
                     }</button>
                 </div>
@@ -511,8 +546,92 @@ const DashboardScreen=(params)=>{
 
            </div>:modalScreen===8?
            <DeleteScreen isLoading={params.isLoading} cancel={()=>params.changeModalState(false,1,1,null)} actions={()=>params.deleteInvitation(params.someValue?params.someValue.id:1)} desc={"Are you sure you want to delete this invitation code?"}/>
-:
+:modalScreen===9?<div className="w-30 padding white" style={{marginTop:'5%'}}>
+          <Typography variant="h5" className="padding">Promote user to admin</Typography>
+         
+          <Autocomplete
+      disablePortal
+      variant="outlined"
+      id="combo-box-demo"
+      value={selected?selected.label:null}
+      onChange={(event, newValue) => {
+        setSelected(newValue);
+        }}
+      options={userDatas?userDatas:[]}
+      sx={{ width: 300 }}
+      renderInput={(params) => <TextField {...params} label="Search user" variant="outlined" />}
+    />
+          <br/><br/>
+        
+          <div className="f-flex m-top" style={{ justifyContent: 'right' }}>
+                    <Button variant={'text'} className="mrit" onClick={() => params.changeModalState(false,1,1,null)}  style={{marginRight:'5%', padding: '0% 10%',color:colors.primary10 }}>Cancel</Button>
+                    <button variant={'contained'} onClick={
+                        ()=>{if(selected!==null){
+                            params.promoteUser(selected?selected.id:null);
+                        }else{
+                            params.setMessage("Select a user to promote to admin")
+                        }}
+                        }  style={{ backgroundColor: colors.primary10,color:'white', padding: '3% 10%' }}>{
+                       params.isLoading?<CircularProgress size={15} sx={{color:'white'}}/>:params.progress===1?"Make Admin":"SAVE"
+                    }</button>
+                </div>
 
+
+           </div>:modalScreen===10?
+           <div className="w-30 white padding" style={{marginTop:'10%'}}>
+               
+               <div className="w-90 left-r">
+             
+                   <p style={{fontSize:15,color:'black'}}><b>{params.progress===1?"Add":"Edit"} Dose Message</b></p>
+                   <br/><br/>
+                   {
+                       batch.map((dat,i)=>{
+                        let val=params.progress===2?batch[i].value != null?batch[i].value:params.someValue.value:batch[i].value;
+                        let val2=params.progress===2?batch[i].es != null?batch[i].es:params.someValue.es:batch[i].es;
+                           
+                           console.log("valueee",val)
+                           {/* setChanged(val) */}
+                           return ( <div><TextField label="Description(en)" className="w-f" variant="outlined" value={!changed?val:null} onChange={(e)=>{let xx=batch;xx[i].value=e.target.value;setBatch(xx);setChanged(e.target.value);console.log("batch"+batch[i].value!=null,JSON.stringify(batch)+params.progress)}}/>
+                                 <br/><br/>
+                                 <TextField label="Description(es)" className="w-f" variant="outlined" value={!changed?val2:null} onChange={(e)=>{let xx=batch;xx[i].es=e.target.value;setBatch(xx);setChanged(e.target.value);console.log("batch"+batch[i].es!=null,JSON.stringify(batch)+params.progress)}}/>
+                                 <br/><br/>
+                                 <Select 
+                value={isActive}
+                label="status"
+                variant='outlined'
+                className="w-f"
+                id="dosemessage"
+                onChange={(e)=>setIsActive(e.target.value)}>
+        <MenuItem value={true}>Active</MenuItem>
+        <MenuItem value={false}>InActive</MenuItem>
+  </Select>
+                <br/><br/>
+                                 </div>)
+                          
+                       })
+                   }
+                  
+                   
+                   <br/><br/>
+               <div className="f-flex m-top" style={{ justifyContent: 'right' }}>
+                    <button onClick={()=>
+        params.changeModalState(false,1,1,null)} className="mrit border"  style={{marginRight:'5%', padding: '0% 10%',color:colors.primary10 }}>Cancel</button>
+                    <button style={{ backgroundColor: colors.primary10,color:'white', padding: '3% 10%' }} onClick={() => {console.log("ego",{
+                       a: batch[0].value,b:batch[0].es,c:isActive,d:params.someValue?params.someValue.id:null
+                    })
+                        batch.length >0?params.progress===1?params.addDoseMessage(batch,isActive):params.someValue.value===securityQuestionValue?params.setMessage("No changes made"):params.editDoseMessage(batch[0].value,batch[0].es,isActive,params.someValue?params.someValue.id:null):params.setMessage("add dose message to continue")
+                    }}>
+                        {params.isLoading?
+                        <CircularProgress size={15} sx={{color:'white'}}/>:params.progress===1?"Done":"Save"}
+                    </button>
+                </div>
+               </div>
+
+               <br/>
+              
+           </div>:modalScreen===11?
+           <DeleteScreen isLoading={params.isLoading} cancel={()=>params.changeModalState(false,1,1,null)} actions={()=>params.deleteDoseMessage(id)} desc={"Are you sure you want to delete this dose message?"}/>
+:
            <DeleteScreen isLoading={params.isLoading} cancel={()=>params.changeModalState(false,1,1,null)} actions={()=>params.deleteSecurityQuestion(id)} desc={"Are you sure you want to delete this security question?"}/>
 
           
@@ -555,11 +674,14 @@ const mapDispatchTopProps=(dispatch)=>{
         generateCode:(numer,date)=>dispatch(generateCodes(numer,date)),
         deleteInvitation:(id)=>dispatch(deleteInvitationCode(id)),
         logout:()=>dispatch(logout()),
-        dispatchers:()=>dispatch(dispatchSigned())
+        dispatchers:()=>dispatch(dispatchSigned()),
+        loaduser:()=>dispatch(loadAllUsers()),
+        promoteUser:(id)=>dispatch(promoteUser(id)),
+        deleteDoseMessage:(id)=>dispatch(deleteDoseMessage(id)),
+        editDoseMessage:(value,es,status,id)=>dispatch(editDoseMessage(value,es,status,id)),
+        addDoseMessage:(batch,status)=>dispatch(addDoseMessage(batch,status))
     }
 }
 export default connect(mapStateToProps,mapDispatchTopProps)(DashboardScreen)
-const Dash=()=>{
-    return <h1>this is dashboard</h1>
-}
+
 

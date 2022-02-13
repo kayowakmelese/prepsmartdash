@@ -6,6 +6,7 @@ import moment from 'moment'
 import {generateCodes,loadGeneratedCodes, setDataReducer,setModalReducer} from '../../../action/index'
 import { getTimeFromMins } from '../../../functions/checkSigned'
 import LoadingData from '../../../components/loadingData'
+import NoItemFound from '../../../components/NoItemFound'
 const GenerateCodes=(params)=>{
     const [codeNumber,setCodeNumber]=React.useState(null)
     const [data,setData]=React.useState(null)
@@ -32,7 +33,7 @@ const GenerateCodes=(params)=>{
        <br/><br/>
        
        <div className="w-f">
-       {data?
+       {data && data.length>0?
        <table className="w-f">
             <tr className="eee">
                 <th className="w-5 padding">#</th>
@@ -60,7 +61,7 @@ const GenerateCodes=(params)=>{
                 <td className="padding">{dat.invitationCode}
                 <IconButton onClick={()=>{navigator.clipboard.writeText(dat.invitationCode);params.setMessage("copied invitation code successfully!")}}>
 
-                <img src='../../icons/copy.svg' height={20} width={20}/>
+                <img src={`${process.env.PUBLIC_URL}/icons/copy.svg`} height={20} width={20}/>
                 </IconButton>
                 </td>
                 <td className="padding">{moment(dat.expiryDate).format('MMM DD YYYY')}</td>
@@ -83,7 +84,7 @@ const GenerateCodes=(params)=>{
       
        </table>
        
-       :params.isLoading?<LoadingData/>:null}
+       :params.isLoading?<LoadingData/>:<NoItemFound/>}
        </div>
     </div>
 }

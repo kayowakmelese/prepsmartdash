@@ -11,6 +11,7 @@ import moment from 'moment'
 import {DesktopDatePicker} from '@mui/lab';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DateAdapter from '@mui/lab/AdapterMoment';
+import NoItemFound from '../../../components/NoItemFound';
 
 
 const EncounterScreen=(params)=>{
@@ -212,7 +213,7 @@ const EncounterScreen=(params)=>{
           
                 <div style={{height:500}}>
                 <div className="w-f" >
-                {encounters?
+                {encounters && encounters.length>0?
                   <table>
                     <tr className="eee">
                         <th className="w-10 padding">#</th>
@@ -255,7 +256,7 @@ const EncounterScreen=(params)=>{
                     </tr>
                      })
                    }
-                    </table>:params.isLoading?<LoadingData/>:null
+                    </table>:params.isLoading?<LoadingData/>:<NoItemFound/>
                 }
              
                     </div>

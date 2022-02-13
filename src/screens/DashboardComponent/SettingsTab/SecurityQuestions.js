@@ -5,6 +5,7 @@ import { loadSecurityQuestions, setModalReducer } from '../../../action';
 import LoadingData from '../../../components/loadingData';
 import moment from 'moment'
 import {colors} from '../../../styles/index'
+import NoItemFound from '../../../components/NoItemFound';
 
 const SecurityQuestionScreen=(params)=>{
     const [data,setData]=React.useState(null)
@@ -30,25 +31,29 @@ const SecurityQuestionScreen=(params)=>{
     {
         data? <table className="w-f">
         <tr className="eee">
-            <th className="w-10 padding">#</th>
+            <th className="w-5 padding">#</th>
             <th className="w-30">Description(en)</th>
             
             <th className="w-30">Description(es)</th>
             <th className="w-10">Status</th>
             <th className="w-10">Creation Date</th>
 
-            <th className="w-10">Action</th>
+            <th className="w-5">Action</th>
         </tr>
         {data.map((dat,o)=>{
             let id=dat.id;
                 return  <tr style={{borderBottom:'1px solid #222 !important'}}>
             <td className="padding">{o+1}</td>
-            <td>{dat.value}</td>
-            <td>{dat.es}</td>
-            <td>Active</td>
-            <td>{moment().format('MMM DD ,HH:MM a')}</td>
+            <td className="padding">{dat.en}</td>
+            <td className="padding">{dat.es}</td>
+            <td className='padding'>
+                             <p className={`${dat.isActive?'green':'red'} w-30`}>
+                            <Typography color={dat.isActive?'green':'orangered'} variant={'p'} sx={{color:dat.isActive?'green !important':'orangered !important',borderColor:dat.isOnCycle?'green':'red',borderWidth:1}} >{dat.isActive?"Active":"Deactive"}</Typography>
+            </p>
+                         </td>
+            <td className="padding">{moment(dat.createdDate).format('MMM DD ,HH:MM a')}</td>
             <td className="f-flex padding" style={{alignSelf:'center',justifyContent:'center'}}>
-                <IconButton onClick={()=>{params.changeModalState(true,4,2,{id:dat.id,value:dat.value})}}><img src={`${process.env.PUBLIC_URL}/icons/edit.svg`} height={20} width={20}/></IconButton>
+                <IconButton onClick={()=>{params.changeModalState(true,4,2,{id:dat.id,value:dat.en,es:dat.es,status:dat.isActive})}}><img src={`${process.env.PUBLIC_URL}/icons/edit.svg`} height={20} width={20}/></IconButton>
 
                 <IconButton onClick={()=>{params.changeModalState(true,6,3,{id:dat.id,value:dat.value})}}><img src={`${process.env.PUBLIC_URL}/icons/delete.svg`} height={20} width={20}/></IconButton>
             </td>
@@ -56,7 +61,7 @@ const SecurityQuestionScreen=(params)=>{
             })
        }
        
-    </table>:params.isLoading?<LoadingData/>:null
+    </table>:params.isLoading?<LoadingData/>:<NoItemFound/>
     }
    
 </div>

@@ -21,6 +21,7 @@ import SecurityQuestionScreen from './screens/DashboardComponent/SettingsTab/Sec
 import SexTypeScreen from './screens/DashboardComponent/SettingsTab/SexTypeTab'
 import AdminScreen from './screens/DashboardComponent/Admins/AdminScreen'
 import MessageScreen from './screens/DashboardComponent/messages/index'
+import DoseMessageScreen from './screens/DashboardComponent/SettingsTab/DoseMessageTab'
 
 import EncounterScreen from './screens/DashboardComponent/UserTabs/EncounterTab'
 function App(props) {
@@ -45,7 +46,8 @@ function App(props) {
           <Route path={'admins'} element={<AdminScreen/>}/> 
           <Route path={'encounters'} element={<EncounterScreen/>}/>
 
-          
+          <Route path={'dosemessages'} element={<DoseMessageScreen/>}/>
+
           <Route path={'messages'} element={<MessageScreen/>}/>
 
 

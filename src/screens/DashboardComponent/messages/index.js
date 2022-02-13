@@ -10,6 +10,7 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CloseIcon from '@mui/icons-material/Close';
 import { CircularProgress } from '@material-ui/core'
+import NoItemFound from '../../../components/NoItemFound'
 const MessageScreen=(params)=>{
     const [messages,setMessages]=React.useState(null)
     const [screen,setScreen]=React.useState(1)
@@ -53,7 +54,7 @@ const MessageScreen=(params)=>{
             <br/><br/>
             <div className="border  w-f padding" >
                 {screen===1?
-                    messages?messages.map((dat,i)=>{
+                    messages && messages.length>0?messages.map((dat,i)=>{
                         return <div className="padding f-flex" onClick={()=>{setSelectedUser(dat);setScreen(2);parseData(dat.direction==="outbound-api"?dat.to:dat.from)}} style={{backgroundColor:dat.direction==="outbound-api"?'#00d50003':'#7ae91e08',justifyContent:'space-between',cursor:'pointer'}}>
                         
                        <div> <p style={{fontSize:12,color:colors.primary10}}>{dat.to}</p>
@@ -65,7 +66,7 @@ const MessageScreen=(params)=>{
                        </div>
                                 
                         </div>;
-                    }):params.isLoading?<LoadingData/>:null:
+                    }):params.isLoading?<LoadingData/>:<NoItemFound/> :
                     <div className="padding " style={{alignSelf:'center',alignContent:'center',position:'relative'}}>
                     
                     <div className="f-flex">

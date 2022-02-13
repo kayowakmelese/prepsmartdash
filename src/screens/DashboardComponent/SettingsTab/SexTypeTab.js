@@ -5,6 +5,7 @@ import { loadSecurityQuestions, loadSexType, setModalReducer } from '../../../ac
 import LoadingData from '../../../components/loadingData';
 import moment from 'moment'
 import {colors} from '../../../styles/index'
+import NoItemFound from '../../../components/NoItemFound';
 const SexTypeScreen=(params)=>{
     const [data,setData]=React.useState(null)
     React.useEffect(()=>{
@@ -30,7 +31,7 @@ const SexTypeScreen=(params)=>{
     </div>
        <br/><br/>
     {
-        data?<table className="w-f">
+        data && data.length>0?<table className="w-f">
         <tr className="eee">
             <th className="w-10 padding">#</th>
             <th className="w-30">Name(en)</th>
@@ -55,7 +56,7 @@ const SexTypeScreen=(params)=>{
             })
        }
        
-    </table>:params.isLoading?<LoadingData/>:null
+    </table>:params.isLoading?<LoadingData/>:<NoItemFound/>
     }
     
 </div>

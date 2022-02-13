@@ -4,12 +4,13 @@ import { CircularProgress } from '@mui/material';
 import { GridCloseIcon } from '@mui/x-data-grid';
 import * as React from 'react'
 import { connect } from 'react-redux';
-import { addBatchSecurityQuestion, addBatchSexType, addSecurityQuestions,editSecurityQuestion, addSexType, setDataReducer, editSexType,setModalReducer,deleteSexType,deleteSecurityQuestion } from '../../../action';
+import { addBatchSecurityQuestion, addBatchSexType,getAllDoseMessage, addSecurityQuestions,editSecurityQuestion, addSexType, setDataReducer, editSexType,setModalReducer,deleteSexType,deleteSecurityQuestion } from '../../../action';
 import { colors } from '../../../styles';
 import GenerateCodes from './GenerateCodes';
 import SecurityQuestionScreen from './SecurityQuestions';
 import SexTypeScreen from './SexTypeTab';
 import DeleteScreen from '../../../components/deletecomponent'
+import LoadingData from '../../../components/loadingData';
 
 const SettingScreen=(params)=>{
     const [tabvalue,setTabValue]=React.useState(1)
@@ -21,6 +22,7 @@ const SettingScreen=(params)=>{
     const [count,setCount]=React.useState(1);
     const [changed,setChanged]=React.useState(null)
     const [id,setId]=React.useState(null);
+    const [data,setData]=React.useState(null)
     React.useEffect(()=>{  
         if(tabvalue===1){
             setModalScreen(1)
@@ -57,6 +59,8 @@ const SettingScreen=(params)=>{
             }else if(params.success.type==="EDITSECURITYQUESTION"){
                 setChanged(null)
                 params.changeModalState(false,1,1,null)
+            }else if(params.success.type==="DOSEMESSAGES"){
+                setData(params.data)
             }
         }
     },[params.success])
@@ -78,6 +82,7 @@ const SettingScreen=(params)=>{
     },[batch])
     React.useEffect(()=>{
         setCount(1)
+        params.loadAllDoseMessages();
     },[])
     return <div className="w-f padding">
         <Box sx={{borderBottom:'1px solid '+colors.primary2}}>
@@ -98,33 +103,7 @@ const SettingScreen=(params)=>{
            {
                tabvalue===1?
            <SexTypeScreen/>:
-            tabvalue===2?
-            <div className="w-70">
-                <table className="w-f">
-                    <tr className="eee">
-                        <th className="w-10 padding">#</th>
-                        <th className="w-20">Dose type</th>
-                        <th className="w-70">Message</th>
-                        <th className="w-10">Action</th>
-                    </tr>
-                    {
-                        [0,1,2,2,2,2,2,2,2,2].map((dat,o)=>{
-                            return  <tr style={{borderBottom:'1px solid #222 !important'}}>
-                        <td className="padding">{o}</td>
-                        <td>Dose type</td>
-                        <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-eiusmod tempor incididunt ut labore et dolore magna aliqua.</td>
-                        <td className="f-flex padding" style={{alignSelf:'center',justifyContent:'center'}}>
-                            <IconButton onClick={()=>{setModal(true);setModalScreen(2)}}><img src='../../icons/edit.svg' height={20} width={20}/></IconButton>
-
-                            <IconButton onClick={()=>{setModal(true);setModalScreen(2)}}><img src='../../icons/delete.svg' height={20} width={20}/></IconButton>
-                        </td>
-                    </tr>
-                        })
-                    }
-                   
-                </table>
-            </div>:
+            
             tabvalue===3?
             <SecurityQuestionScreen/>:
            <GenerateCodes/>
@@ -267,7 +246,8 @@ const mapDispatchTopProps=(dispatch)=>{
         deleteSexType:(id)=>dispatch(deleteSexType(id)),
         deleteSecurityQuestion:(id)=>dispatch(deleteSecurityQuestion(id)),
         editSexType:(value,status,id)=>dispatch(editSexType(value,status,id)),
-        editSecurityQuestion:(value,id)=>dispatch(editSecurityQuestion(value,id))
+        editSecurityQuestion:(value,id)=>dispatch(editSecurityQuestion(value,id)),
+        loadAllDoseMessages:()=>dispatch(getAllDoseMessage())
 
    
 
