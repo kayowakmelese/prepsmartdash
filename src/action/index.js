@@ -24,7 +24,7 @@ export const setDataReducer=(isLoading,error,success,data)=>{
 }
 export const setModalReducer=(visible,screen,progress,someValue)=>{
     return {
-        type:MODAL
+        type:MODAL,
         visible,screen,progress,someValue
     }
 }
