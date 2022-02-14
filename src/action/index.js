@@ -77,11 +77,7 @@ export const createAdmin=(firstname,lastname,password,email)=>{
         }
         console.log("params",params)
         dispatch(setDataReducer(true,null,null,null))
-<<<<<<< HEAD
         axios.post(`http://${IP}:${PORT}/api/admin/create`,params).then((data)=>{
-=======
-        axios.post(`https://${IP}/api/admin/create`,params).then((data)=>{
->>>>>>> a8acc687d37530b29d1bc003a840045a8d461982
             if(data.data){
                
                 console.log("response",data.data)
@@ -110,11 +106,7 @@ export const generateCodes=(number,expdate)=>{
             expiryDate:expdate
         }
         dispatch(setDataReducer(true,null,null,null))
-<<<<<<< HEAD
         axios.post(`http://${IP}:${PORT}/api/invitation-code/add`,params).then((data)=>{
-=======
-        axios.post(`https://${IP}/api/invitation-code/add`,params).then((data)=>{
->>>>>>> a8acc687d37530b29d1bc003a840045a8d461982
             if(data.data){
                 dispatch(setDataReducer(false,null,{type:"INVITATIONREQUEST",message:null},data.data))
             }else{
@@ -134,11 +126,7 @@ export const resetPassword = (email) => {
             email:email
         }
         dispatch(setDataReducer(true, null, null, null))
-<<<<<<< HEAD
         axios.post(`http://${IP}:${PORT}/api/auth/forgot-password`, params).then((data) => {
-=======
-        axios.post(`https://${IP}/api/auth/forgot-password`, params).then((data) => {
->>>>>>> a8acc687d37530b29d1bc003a840045a8d461982
             if (data.data) {
                 console.log("server response", data.data)
 
@@ -157,11 +145,7 @@ export const loadGeneratedCodes=()=>{
 
         }
         dispatch(setDataReducer(true,null,null,null))
-<<<<<<< HEAD
         axios.get(`http://${IP}:${PORT}/api/invitation-code/all`,params).then((data)=>{
-=======
-        axios.get(`https://${IP}/api/invitation-code/all`,params).then((data)=>{
->>>>>>> a8acc687d37530b29d1bc003a840045a8d461982
             if(data.data){
                 console.log("datadata",data.data)
                 dispatch(setDataReducer(false,null,{type:"INVITATIONCODES",message:null},data.data.invitationCodes))
@@ -180,11 +164,7 @@ export const loadSecurityQuestions=()=>{
 
         }
         dispatch(setDataReducer(true,null,null,null))
-<<<<<<< HEAD
         axios.get(`http://${IP}:${PORT}/api/lookups/security-questions`,params).then((data)=>{
-=======
-        axios.get(`https://${IP}/api/lookups/security-questions`,params).then((data)=>{
->>>>>>> a8acc687d37530b29d1bc003a840045a8d461982
             if(data.data){
                 console.log("datadata",data.data)
                 dispatch(setDataReducer(false,null,{type:"SECURITYQUESTIONS",message:null},data.data.securityQuestions))
@@ -203,11 +183,7 @@ export const loadAllUsers=()=>{
 
         }
         dispatch(setDataReducer(true,null,null,null))
-<<<<<<< HEAD
         axios.get(`http://${IP}:${PORT}/api/admin/all/users`,params).then((data)=>{
-=======
-        axios.get(`https://${IP}/api/admin/all/users`,params).then((data)=>{
->>>>>>> a8acc687d37530b29d1bc003a840045a8d461982
             if(data.data){
                 console.log("datadata",data.data)
                 dispatch(setDataReducer(false,null,{type:"ALLUSERS",message:null},data.data.users))
@@ -226,11 +202,7 @@ export const promoteUser=(id)=>{
             role:2
         }
         dispatch(setDataReducer(true,null,null,null))
-<<<<<<< HEAD
         axios.post(`http://${IP}:${PORT}/api/admin/user/${id}/update`,params).then((data)=>{
-=======
-        axios.post(`https://${IP}/api/admin/user/${id}/update`,params).then((data)=>{
->>>>>>> a8acc687d37530b29d1bc003a840045a8d461982
             if(data.data){
                 console.log("datadata",data.data)
                 dispatch(setDataReducer(false,null,{type:"PROMOTEUSER",message:"user promoted to Admin"},data.data))
@@ -250,11 +222,7 @@ export const loadMessages=()=>{
 
         }
         dispatch(setDataReducer(true,null,null,null))
-<<<<<<< HEAD
         axios.get(`http://${IP}:${PORT}/api/sms/messages`,params).then((data)=>{
-=======
-        axios.get(`https://${IP}/api/sms/messages`,params).then((data)=>{
->>>>>>> a8acc687d37530b29d1bc003a840045a8d461982
             if(data.data){
                 console.log("datadata",data.data)
                 dispatch(setDataReducer(false,null,{type:"ALLMESSAGES",message:null},data.data.messages))
@@ -273,11 +241,7 @@ export const loadAdmins=()=>{
 
         }
         dispatch(setDataReducer(true,null,null,null))
-<<<<<<< HEAD
         axios.get(`http://${IP}:${PORT}/api/admin/all/admins`,params,{
-=======
-        axios.get(`https://${IP}/api/admin/all/admins`,params,{
->>>>>>> a8acc687d37530b29d1bc003a840045a8d461982
             Authorization:'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJGRU1wcm5sVnJsbjZBWWM2a0lxcGYiLCJpYXQiOjE2NDI2MjAxMTk2ODYsImV4cCI6MTY0MjcwNjUxOTY4Nn0.oebR4vLN8lhtclkNLijwdU6sfQ22ekw7q-PCPus-Jk0'
         }).then((data)=>{
             if(data.data){
@@ -298,11 +262,7 @@ export const loadEncouters=(id)=>{
 
         }
         dispatch(setDataReducer(true,null,null,null))
-<<<<<<< HEAD
         axios.get(`http://${IP}:${PORT}/api/admin/user/${id}/encounter`,params,{
-=======
-        axios.get(`https://${IP}/api/admin/user/${id}/encounter`,params,{
->>>>>>> a8acc687d37530b29d1bc003a840045a8d461982
             headers:{
                 'Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJGRU1wcm5sVnJsbjZBWWM2a0lxcGYiLCJpYXQiOjE2NDI2MjAxMTk2ODYsImV4cCI6MTY0MjcwNjUxOTY4Nn0.oebR4vLN8lhtclkNLijwdU6sfQ22ekw7q-PCPus-Jk0'
             }
@@ -325,11 +285,7 @@ export const loadSexType=()=>{
 
         }
         dispatch(setDataReducer(true,null,null,null))
-<<<<<<< HEAD
         axios.get(`http://${IP}:${PORT}/api/lookups/sex-type`,params).then((data)=>{
-=======
-        axios.get(`https://${IP}/api/lookups/sex-type`,params).then((data)=>{
->>>>>>> a8acc687d37530b29d1bc003a840045a8d461982
             if(data.data){
                 console.log("datadata",data.data)
                 dispatch(setDataReducer(false,null,{type:"SEXTYPE",message:null},data.data.sexTypes))
@@ -350,11 +306,7 @@ export const addSexType=(en)=>{
             isActive:true
         }
         dispatch(setDataReducer(true,null,null,null))
-<<<<<<< HEAD
         axios.post(`http://${IP}:${PORT}/api/lookups/sex-type`,params).then((data)=>{
-=======
-        axios.post(`https://${IP}/api/lookups/sex-type`,params).then((data)=>{
->>>>>>> a8acc687d37530b29d1bc003a840045a8d461982
             if(data.data){
                 console.log("datadata",data.data)
                 dispatch(setDataReducer(false,null,{type:"ADDSEXTYPE",message:"sex type added successfully!"},data.data.securityQuestions))
@@ -375,11 +327,7 @@ export const sendMessage=(to,text)=>{
             text:text
         }
         dispatch(setDataReducer(true,null,null,null))
-<<<<<<< HEAD
         axios.post(`http://${IP}:${PORT}/api/sms/send`,params).then((data)=>{
-=======
-        axios.post(`https://${IP}/api/sms/send`,params).then((data)=>{
->>>>>>> a8acc687d37530b29d1bc003a840045a8d461982
             if(data.data){
                 console.log("datadata",data.data)
                 dispatch(setDataReducer(false,null,{type:"SENTMESSAGE",message:"Message Sent Successfully"},data.data))
@@ -402,11 +350,7 @@ export const addSecurityQuestions=(en)=>{
             isActive:true
         }
         dispatch(setDataReducer(true,null,null,null))
-<<<<<<< HEAD
         axios.post(`http://${IP}:${PORT}/api/lookups/security-questions`,params).then((data)=>{
-=======
-        axios.post(`https://${IP}/api/lookups/security-questions`,params).then((data)=>{
->>>>>>> a8acc687d37530b29d1bc003a840045a8d461982
             if(data.data){
                 console.log("datadata",data.data)
                 dispatch(setDataReducer(false,null,{type:"AddSECURITYQUESTIONS",message:"security questions added successfully!"},data.data.securityQuestions))
@@ -437,11 +381,7 @@ export const addBatchSecurityQuestion=(batch)=>{
         }
         console.log("paramsare",params)
         dispatch(setDataReducer(true,null,null,null))
-<<<<<<< HEAD
         axios.post(`http://${IP}:${PORT}/api/lookups/security-questions/batch`,params).then((data)=>{
-=======
-        axios.post(`https://${IP}/api/lookups/security-questions/batch`,params).then((data)=>{
->>>>>>> a8acc687d37530b29d1bc003a840045a8d461982
             if(data.data){
                 console.log("datadata",data.data)
                 dispatch(setDataReducer(false,null,{type:"AddSECURITYQUESTIONS",message:"security questions added successfully!"},data.data.securityQuestions))
@@ -471,11 +411,7 @@ export const addDoseMessage=(batch,status)=>{
         
         console.log("paramsare",params)
         dispatch(setDataReducer(true,null,null,null))
-<<<<<<< HEAD
         axios.post(`http://${IP}:${PORT}/api/dose-messages/add`,params).then((data)=>{
-=======
-        axios.post(`https://${IP}/api/dose-messages/add`,params).then((data)=>{
->>>>>>> a8acc687d37530b29d1bc003a840045a8d461982
             if(data.data){
                 console.log("datadata",data.data)
                 dispatch(setDataReducer(false,null,{type:"ADDDOSEMESSAGE",message:"dose message added successfully!"},data.data))
@@ -505,11 +441,7 @@ export const editDoseMessage=(value,es,status,id)=>{
     }
         console.log("paramsare",params)
         dispatch(setDataReducer(true,null,null,null))
-<<<<<<< HEAD
         axios.put(`http://${IP}:${PORT}/api/dose-messages/update`,params).then((data)=>{
-=======
-        axios.put(`https://${IP}/api/dose-messages/update`,params).then((data)=>{
->>>>>>> a8acc687d37530b29d1bc003a840045a8d461982
             if(data.data){
                 console.log("datadata",data.data)
                 dispatch(setDataReducer(false,null,{type:"ADDDOSEMESSAGE",message:"dose message added successfully!"},data.data))
@@ -530,11 +462,7 @@ export const getAllDoseMessage=()=>{
         }
         console.log("paramsare",params)
         dispatch(setDataReducer(true,null,null,null))
-<<<<<<< HEAD
         axios.get(`http://${IP}:${PORT}/api/dose-messages/all`,params).then((data)=>{
-=======
-        axios.get(`https://${IP}/api/dose-messages/all`,params).then((data)=>{
->>>>>>> a8acc687d37530b29d1bc003a840045a8d461982
             if(data.data){
                 console.log("datadata",data.data)
                 dispatch(setDataReducer(false,null,{type:"DOSEMESSAGES",message:null},data.data.doseMessages))
@@ -564,11 +492,7 @@ export const addBatchSexType=(batch)=>{
            types:xx
         }
         dispatch(setDataReducer(true,null,null,null))
-<<<<<<< HEAD
         axios.post(`http://${IP}:${PORT}/api/lookups/sex-type/batch`,params).then((data)=>{
-=======
-        axios.post(`https://${IP}/api/lookups/sex-type/batch`,params).then((data)=>{
->>>>>>> a8acc687d37530b29d1bc003a840045a8d461982
             if(data.data){
                 console.log("datadata",data.data)
                 dispatch(setDataReducer(false,null,{type:"ADDSEXTYPE",message:"sex type added successfully!"},data.data.securityQuestions))
@@ -587,11 +511,7 @@ export const deleteSexType=(id)=>{
         let params={
         }
         dispatch(setDataReducer(true,null,null,null))
-<<<<<<< HEAD
         axios.delete(`http://${IP}:${PORT}/api/lookups/sex-type/delete/${id}`,params).then((data)=>{
-=======
-        axios.delete(`https://${IP}/api/lookups/sex-type/delete/${id}`,params).then((data)=>{
->>>>>>> a8acc687d37530b29d1bc003a840045a8d461982
             if(data.data){
                 console.log("datadata",data.data)
                 dispatch(setDataReducer(false,null,{type:"DELETESEXTYPE",message:"sex type deleted successfully!"},data.data))
@@ -610,11 +530,7 @@ export const deleteDoseMessage=(id)=>{
         let params={
         }
         dispatch(setDataReducer(true,null,null,null))
-<<<<<<< HEAD
         axios.delete(`http://${IP}:${PORT}/api/dose-messages/delete/${id}`,params).then((data)=>{
-=======
-        axios.delete(`https://${IP}/api/dose-messages/delete/${id}`,params).then((data)=>{
->>>>>>> a8acc687d37530b29d1bc003a840045a8d461982
             if(data.data){
                 console.log("datadata",data.data)
                 dispatch(setDataReducer(false,null,{type:"DELETEDOSE",message:"dose message deleted successfully!"},data.data))
@@ -633,11 +549,7 @@ export const deleteInvitationCode=(id)=>{
         let params={
         }
         dispatch(setDataReducer(true,null,null,null))
-<<<<<<< HEAD
         axios.delete(`http://${IP}:${PORT}/api/invitation-code/delete/${id}`,params).then((data)=>{
-=======
-        axios.delete(`https://${IP}/api/invitation-code/delete/${id}`,params).then((data)=>{
->>>>>>> a8acc687d37530b29d1bc003a840045a8d461982
             if(data.data){
                 console.log("datadata",data.data)
                 dispatch(setDataReducer(false,null,{type:"DELETECODE",message:"sex type deleted successfully!"},data.data))
@@ -657,11 +569,7 @@ export const deleteSecurityQuestion=(id)=>{
         let params={
         }
         dispatch(setDataReducer(true,null,null,null))
-<<<<<<< HEAD
         axios.delete(`http://${IP}:${PORT}/api/lookups/security-questions/delete/${id}`,params).then((data)=>{
-=======
-        axios.delete(`https://${IP}/api/lookups/security-questions/delete/${id}`,params).then((data)=>{
->>>>>>> a8acc687d37530b29d1bc003a840045a8d461982
             if(data.data){
                 console.log("datadata",data.data)
                 dispatch(setDataReducer(false,null,{type:"DELETESECURITYQUESTION",message:"security question deleted successfully!"},data.data))
@@ -690,11 +598,7 @@ export const editSecurityQuestion=(value,es,status,id)=>{
         }
         console.log("paramsd",params)
         dispatch(setDataReducer(true,null,null,null))
-<<<<<<< HEAD
         axios.put(`http://${IP}:${PORT}/api/lookups/security-questions/update`,params).then((data)=>{
-=======
-        axios.put(`https://${IP}/api/lookups/security-questions/update`,params).then((data)=>{
->>>>>>> a8acc687d37530b29d1bc003a840045a8d461982
             if(data.data){
                 console.log("datadata",data.data)
                 dispatch(setDataReducer(false,null,{type:"EDITSECURITYQUESTION",message:"security question updated successfully!"},data.data))
@@ -715,11 +619,7 @@ export const updateUser=(id,isActive)=>{
         }
         console.log("paramsd",params)
         dispatch(setDataReducer(true,null,null,null))
-<<<<<<< HEAD
         axios.post(`http://${IP}:${PORT}/api/admin/user/${id}/update`,params).then((data)=>{
-=======
-        axios.post(`https://${IP}/api/admin/user/${id}/update`,params).then((data)=>{
->>>>>>> a8acc687d37530b29d1bc003a840045a8d461982
             if(data.data){
                 console.log("datadata",data.data)
                 dispatch(setDataReducer(false,null,{type:"UPDATEUSER",message:"user updated successfully!"},data.data))
@@ -743,11 +643,7 @@ export const updateAdmin=(id,firstname,lastname,email,isActive)=>{
         }
         console.log("paramsd",params)
         dispatch(setDataReducer(true,null,null,null))
-<<<<<<< HEAD
         axios.post(`http://${IP}:${PORT}/api/admin/user/${id}/update`,params).then((data)=>{
-=======
-        axios.post(`https://${IP}/api/admin/user/${id}/update`,params).then((data)=>{
->>>>>>> a8acc687d37530b29d1bc003a840045a8d461982
             if(data.data){
                 console.log("datadata",data.data)
                 dispatch(setDataReducer(false,null,{type:"UPDATEAdmin",message:"user updated successfully!"},data.data))
@@ -770,11 +666,7 @@ export const editSexType=(value,es,status,id)=>{
         }
         console.log("params",params)
         dispatch(setDataReducer(true,null,null,null))
-<<<<<<< HEAD
         axios.put(`http://${IP}:${PORT}/api/lookups/sex-type/update`,params).then((data)=>{
-=======
-        axios.put(`https://${IP}/api/lookups/sex-type/update`,params).then((data)=>{
->>>>>>> a8acc687d37530b29d1bc003a840045a8d461982
             if(data.data){
                 console.log("datadata",data.data)
                 dispatch(setDataReducer(false,null,{type:"EDITEDSEXTYPE",message:"Sex type edited successfully"},data.data))
