@@ -7,12 +7,20 @@ import { IconButton,Typography,Button } from '@mui/material';
 import moment from 'moment'
 import NoItemFound from '../../../components/NoItemFound';
 
+import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
+
+
 const DoseMessageScreen=(params)=>{
     const [data,setData]=React.useState(null)
+    
+    const [page,setPage]=React.useState(0)
+    const [pagerCount,setPagerCount]=React.useState(null)
     React.useEffect(()=>{
         if(params.success){
             if(params.success.type==="DOSEMESSAGES"){
                 setData(params.data)
+                setPagerCount(parseInt(params.data.length/10))
             }
         }
     },[params.success])
@@ -29,7 +37,7 @@ const DoseMessageScreen=(params)=>{
         New Dose message</Button>
     </div>
     <br/><br/>
-   {data && data.length>0? <table className="w-f">
+   {data && data.length>0? <div><table className="w-f">
         <tr className="eee">
             <th className="w-10 padding">#</th>
             <th className="w-20">Name(en)</th>
@@ -58,7 +66,11 @@ const DoseMessageScreen=(params)=>{
             })
         }
        
-    </table>:params.isLoading?<LoadingData/>:<NoItemFound/>
+    </table>
+    <Stack spacing={0}>
+      <Pagination count={pagerCount} color={'primary'} variant="outlined" shape="rounded" page={page} onChange={(event,value)=>setPage(value)} />
+      </Stack>
+    </div>:params.isLoading?<LoadingData/>:<NoItemFound/>
 }
 </div>
 }

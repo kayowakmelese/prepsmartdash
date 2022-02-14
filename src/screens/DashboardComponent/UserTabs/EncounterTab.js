@@ -13,6 +13,8 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DateAdapter from '@mui/lab/AdapterMoment';
 import NoItemFound from '../../../components/NoItemFound';
 
+import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
 
 const EncounterScreen=(params)=>{
     const [modal,setModal]=React.useState(false);
@@ -28,6 +30,8 @@ const EncounterScreen=(params)=>{
     const [status,setStatus]=React.useState("All");
     const [sortedData,setSortedData]=React.useState(null)
 
+    const [page,setPage]=React.useState(0)
+    const [pagerCount,setPagerCount]=React.useState(null)
     React.useEffect(()=>{
         params.loadUsers()
     },[])
@@ -35,10 +39,15 @@ const EncounterScreen=(params)=>{
       if(params.success){
         if(params.success.type==="ALLUSERS"){
               setAllData(params.data)
+              setPagerCount(parseInt(params.data.length/10))
+
+              
               
         computeActive(status)
         }else if(params.success.type==="USERENCOUNTER"){
           setEncounters(params.data)
+          setPagerCount(parseInt(params.data.length/10))
+
         }
       }
     },[params.success])
@@ -126,7 +135,7 @@ const EncounterScreen=(params)=>{
         <br/>
             <div className="w-f" >
             {
-              allData?<table className="w-f ">
+              allData?<div><table className="w-f ">
                     <tr className="eee">
                         <th className="w-5 padding">#</th>
                         <th className="w-10">Name</th>
@@ -138,7 +147,8 @@ const EncounterScreen=(params)=>{
                     </tr>
                    {sortedData?
                      sortedData.map((dat,i)=>{
-                       return  <tr className="tr-hover" style={{cursor:'pointer'}} onClick={()=>{
+                       
+                       return  i >=page*10 && i <=(page*10)+10? <tr className="tr-hover" style={{cursor:'pointer'}} onClick={()=>{
                          setScreen(2);setSelectedId(dat.userId);params.loadEncouters(dat.userId);setDetailData(dat);
                        }}>
                     <td className="padding" >{i+1}</td>
@@ -162,10 +172,10 @@ const EncounterScreen=(params)=>{
                 </div></center>
                          </td>
                      
-                    </tr>
+                    </tr>:null
                      }):
                      allData.map((dat,i)=>{
-                       return  <tr className="tr-hover" style={{cursor:'pointer'}} onClick={()=>{
+                       return  i >=page*10 && i <=(page*10)+10? <tr className="tr-hover" style={{cursor:'pointer'}} onClick={()=>{
                          setScreen(2);setSelectedId(dat.userId);params.loadEncouters(dat.userId);setDetailData(dat);
                        }}>
                     <td className="padding" >{i+1}</td>
@@ -189,10 +199,12 @@ const EncounterScreen=(params)=>{
                 </div></center>
                          </td>
                      
-                    </tr>
+                    </tr>:null
                      })
                    }
-                    </table>:params.isLoading?<LoadingData/>:null
+                    </table> <Stack spacing={0}>
+      <Pagination count={pagerCount} color={'primary'} variant="outlined" shape="rounded" page={page} onChange={(event,value)=>setPage(value)} />
+      </Stack></div>:params.isLoading?<LoadingData/>:null
             }
              
                     </div>

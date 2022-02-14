@@ -7,13 +7,20 @@ import moment from 'moment'
 import {colors} from '../../../styles/index'
 import NoItemFound from '../../../components/NoItemFound';
 
+import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
+
 const SecurityQuestionScreen=(params)=>{
     const [data,setData]=React.useState(null)
+    
+    const [page,setPage]=React.useState(0)
+    const [pagerCount,setPagerCount]=React.useState(null)
     React.useEffect(()=>{
         if(params.success){
             if(params.success.type==="SECURITYQUESTIONS"){
                 let dd=params.data.reverse();
                 setData(dd)
+                setPagerCount(parseInt(dd.length/10))
             }
         }
     },[params.success])
@@ -29,7 +36,7 @@ const SecurityQuestionScreen=(params)=>{
     </div>
        <br/><br/>
     {
-        data? <table className="w-f">
+        data?<div> <table className="w-f">
         <tr className="eee">
             <th className="w-5 padding">#</th>
             <th className="w-30">Description(en)</th>
@@ -42,7 +49,7 @@ const SecurityQuestionScreen=(params)=>{
         </tr>
         {data.map((dat,o)=>{
             let id=dat.id;
-                return  <tr style={{borderBottom:'1px solid #222 !important'}}>
+                return   o >=page*10 && o <=(page*10)+10?<tr style={{borderBottom:'1px solid #222 !important'}}>
             <td className="padding">{o+1}</td>
             <td className="padding">{dat.en}</td>
             <td className="padding">{dat.es}</td>
@@ -57,11 +64,17 @@ const SecurityQuestionScreen=(params)=>{
 
                 <IconButton onClick={()=>{params.changeModalState(true,6,3,{id:dat.id,value:dat.value})}}><img src={`${process.env.PUBLIC_URL}/icons/delete.svg`} height={20} width={20}/></IconButton>
             </td>
-        </tr>
+        </tr>:null
             })
        }
        
-    </table>:params.isLoading?<LoadingData/>:<NoItemFound/>
+    </table>
+
+    <Stack spacing={0}>
+      <Pagination count={pagerCount} color={'primary'} variant="outlined" shape="rounded" page={page} onChange={(event,value)=>setPage(value)} />
+      </Stack>
+      </div>
+    :params.isLoading?<LoadingData/>:<NoItemFound/>
     }
    
 </div>

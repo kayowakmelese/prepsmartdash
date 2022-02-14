@@ -7,20 +7,30 @@ import {generateCodes,loadGeneratedCodes, setDataReducer,setModalReducer} from '
 import { getTimeFromMins } from '../../../functions/checkSigned'
 import LoadingData from '../../../components/loadingData'
 import NoItemFound from '../../../components/NoItemFound'
+import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
+
 const GenerateCodes=(params)=>{
     const [codeNumber,setCodeNumber]=React.useState(null)
     const [data,setData]=React.useState(null)
+    const [page,setPage]=React.useState(0)
+    const [pagerCount,setPagerCount]=React.useState(null)
     React.useEffect(()=>{
         if(params.success){
             if(params.success.type==="INVITATIONCODES"){
                 let dd=params.data.reverse();
                 setData(dd)
+                setPagerCount(parseInt(dd.length/10))
             }
         }
     },[params.success])
     React.useEffect(()=>{
         params.loadCodes();
     },[])
+    React.useEffect(()=>{
+       console.log("pager",page)
+    },[page])
+    
     return  <div className="w-f padding">
     <div className="w-f flex " style={{justifyContent:'space-between',alignContent:'center'}}>
         <Typography variant="h5">List Invitations</Typography>
@@ -33,7 +43,7 @@ const GenerateCodes=(params)=>{
        <br/><br/>
        
        <div className="w-f">
-       {data && data.length>0?
+       {data && data.length>0?<div>
        <table className="w-f">
             <tr className="eee">
                 <th className="w-5 padding">#</th>
@@ -46,17 +56,7 @@ const GenerateCodes=(params)=>{
             </tr>
        
         {data.map((dat,o)=>{
-            let diff=null;
-            let checkDay=moment(dat.expiryDate).diff(moment(),'days')
-            if(checkDay>1){
-                diff=checkDay + ' days';
-            }else{
-                diff=moment(dat.expiryDate).diff(moment(),'minutes');
-                diff=getTimeFromMins(diff);
-            }
-            var duration = moment.duration(moment(dat.expiryDate).diff(moment()));
-            var hours = duration.asHours();
-         return dat.isActive?<tr key={dat.invitationCodeId} style={{borderBottom:'1px solid #222 !important'}}>
+         return dat.isActive && o >=page*10 && o <=(page*10)+10?<tr key={dat.invitationCodeId} style={{borderBottom:'1px solid #222 !important'}}>
                 <td className="padding">{o+1}</td>
                 <td className="padding">{dat.invitationCode}
                 <IconButton onClick={()=>{navigator.clipboard.writeText(dat.invitationCode);params.setMessage("copied invitation code successfully!")}}>
@@ -83,6 +83,12 @@ const GenerateCodes=(params)=>{
                 })}
       
        </table>
+       <center >
+       <Stack spacing={0}>
+      <Pagination count={pagerCount} color={'primary'} variant="outlined" shape="rounded" page={page} onChange={(event,value)=>setPage(value)} />
+      </Stack>
+      </center>
+      </div>
        
        :params.isLoading?<LoadingData/>:<NoItemFound/>}
        </div>

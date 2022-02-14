@@ -6,15 +6,21 @@ import LoadingData from '../../../components/loadingData';
 import moment from 'moment'
 import {colors} from '../../../styles/index'
 import NoItemFound from '../../../components/NoItemFound';
+
+import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
 const SexTypeScreen=(params)=>{
     const [data,setData]=React.useState(null)
+    
+    const [page,setPage]=React.useState(0)
+    const [pagerCount,setPagerCount]=React.useState(null)
     React.useEffect(()=>{
         if(params.success){
             if(params.success.type==="SEXTYPE"){
                 if(params.data){
-
                     let dd=params.data.reverse();
                     setData(dd)
+                    setPagerCount(parseInt(dd.length/10))
                 }
             }
         }
@@ -31,7 +37,7 @@ const SexTypeScreen=(params)=>{
     </div>
        <br/><br/>
     {
-        data && data.length>0?<table className="w-f">
+        data && data.length>0?<div><table className="w-f">
         <tr className="eee">
             <th className="w-10 padding">#</th>
             <th className="w-30">Name(en)</th>
@@ -41,7 +47,7 @@ const SexTypeScreen=(params)=>{
             <th className="w-10">Actions</th>
         </tr>
         {data.map((dat,o)=>{
-                return  <tr style={{borderBottom:'1px solid #222 !important'}}>
+                return   o >=page*10 && o <=(page*10)+10?<tr style={{borderBottom:'1px solid #222 !important'}}>
             <td className="padding">{o+1}</td>
             <td>{dat.en}</td>
             <td>{dat.es}</td>
@@ -52,11 +58,14 @@ const SexTypeScreen=(params)=>{
 
                 <IconButton onClick={()=>{params.changeModalState(true,2,3,{value:dat.en,es:dat.es,id:dat.id})}}><img src={`${process.env.PUBLIC_URL}/icons/delete.svg`} height={20} width={20}/></IconButton>
             </td>
-        </tr>
+        </tr>:null
             })
        }
        
-    </table>:params.isLoading?<LoadingData/>:<NoItemFound/>
+    </table> <Stack spacing={0}>
+      <Pagination count={pagerCount} color={'primary'} variant="outlined" shape="rounded" page={page} onChange={(event,value)=>setPage(value)} />
+      </Stack>
+      </div>:params.isLoading?<LoadingData/>:<NoItemFound/>
     }
     
 </div>
