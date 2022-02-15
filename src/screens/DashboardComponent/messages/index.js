@@ -83,6 +83,11 @@ const MessageScreen=(params)=>{
         console.log("array",allMessages)
         return arr;
     }
+    React.useEffect(()=>{
+        if(parsedData){
+            scrollref.current.scrollIntoView()
+        }
+    },[parsedData])
     return (
         <div className='padding w-f'>
             <p><b>Messages</b></p>
@@ -91,7 +96,7 @@ const MessageScreen=(params)=>{
             <div className="border  w-f padding" >
                 {screen===1?<div>
                    { sortedMessage && sortedMessage.length>0?sortedMessage.map((dat,i)=>{
-                        return  i <=page*10 && i >=(page*10)-10?<div className="padding f-flex" onClick={()=>{setSelectedUser(dat);setScreen(2);parseData(dat.direction==="outbound-api"?dat.to:dat.from)}} style={{backgroundColor:dat.direction==="outbound-api"?'#00d50003':'#7ae91e08',justifyContent:'space-between',cursor:'pointer'}}>
+                        return  i <=page*10 && i >=(page*10)-10?<div className="padding f-flex" onClick={()=>{setSelectedUser(dat);setScreen(2);parseData(dat.direction==="outbound-api"?dat.to:dat.from);}} style={{backgroundColor:dat.direction==="outbound-api"?'#00d50003':'#7ae91e08',justifyContent:'space-between',cursor:'pointer',marginBottom:'1%',borderRadius:'5px',backgroundColor:'#fff',fontFamily:'sans-serif',boxShadow:'0px 0px 14px #eee'}}>
                         
                        <div> <p style={{fontSize:12,color:colors.primary10}}>{dat.to}</p>
                        <p><b>{dat.body}</b></p>
