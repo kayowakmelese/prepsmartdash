@@ -29,3 +29,25 @@ export const  getTimeFromMins=(mins)=>{
         m = mins % 60 | 0;
     return moment.utc().hours(h).minutes(m).format("hh:mm A");
 }
+
+export const searchString=(key,givenArray)=>{
+    let arr=[];
+    for(var i=0;i<givenArray.length;i++){
+      let bool=true;
+      let name=null;
+      for(var j=0;j<key.length;j++){
+        name=givenArray[i].firstName+" "+givenArray[i].lastName;
+        if(key.toLowerCase().charAt(j)!==name.toLowerCase().charAt(j)){
+            bool=false;
+        }else{
+        }
+      }
+      if(bool){
+
+        arr.push(givenArray[i])
+      }else{
+        console.log("not equal")
+      }
+    }
+    return arr;
+  }

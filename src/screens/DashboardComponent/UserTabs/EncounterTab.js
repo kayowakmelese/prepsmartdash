@@ -15,6 +15,7 @@ import NoItemFound from '../../../components/NoItemFound';
 
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
+import { searchString } from '../../../functions/checkSigned';
 
 const EncounterScreen=(params)=>{
     const [modal,setModal]=React.useState(false);
@@ -29,12 +30,18 @@ const EncounterScreen=(params)=>{
     const [selectedDate, handleDateChange] = React.useState(new Date());
     const [status,setStatus]=React.useState("All");
     const [sortedData,setSortedData]=React.useState(null)
+    const [search,setSearch]=React.useState(null)
 
-    const [page,setPage]=React.useState(0)
+    const [page,setPage]=React.useState(1)
     const [pagerCount,setPagerCount]=React.useState(null)
     React.useEffect(()=>{
         params.loadUsers()
     },[])
+    React.useEffect(()=>{
+      if(search){
+        setSortedData(searchString(search,allData))
+      }
+  },[search])
     React.useEffect(()=>{
       if(params.success){
         if(params.success.type==="ALLUSERS"){
@@ -94,10 +101,10 @@ const EncounterScreen=(params)=>{
           screen===1?<div>
           <div className="padding w-f" style={{justifyContent:'space-between'}}>
           <Typography variant="h5">
-            List users
+            List Encounters
           </Typography>
           <div className="f-flex " style={{justifyContent:'space-between'}}>
-            <TextField label="search" placeholder="search" variant='outlined' className='w-30'/>
+            <TextField label="search" value={search} onChange={(e)=>setSearch(e.target.value)} placeholder="search" variant='outlined' className='w-30'/>
             <div className="f-flex w-40 " style={{justifyContent:'space-between',alignContent:'center'}}>
               <Typography variant="p" style={{fontSize:15,alignSelf:'center',textAlign:'center'}} className="w-30">Created at</Typography>
              <LocalizationProvider dateAdapter={DateAdapter}>
@@ -148,7 +155,7 @@ const EncounterScreen=(params)=>{
                    {sortedData?
                      sortedData.map((dat,i)=>{
                        
-                       return  i >=page*10 && i <=(page*10)+10? <tr className="tr-hover" style={{cursor:'pointer'}} onClick={()=>{
+                       return  i <=page*10 && i >=(page*10)-10? <tr className="tr-hover" style={{cursor:'pointer'}} onClick={()=>{
                          setScreen(2);setSelectedId(dat.userId);params.loadEncouters(dat.userId);setDetailData(dat);
                        }}>
                     <td className="padding" >{i+1}</td>
@@ -175,7 +182,7 @@ const EncounterScreen=(params)=>{
                     </tr>:null
                      }):
                      allData.map((dat,i)=>{
-                       return  i >=page*10 && i <=(page*10)+10? <tr className="tr-hover" style={{cursor:'pointer'}} onClick={()=>{
+                       return  i <=page*10 && i >=(page*10)-10? <tr className="tr-hover" style={{cursor:'pointer'}} onClick={()=>{
                          setScreen(2);setSelectedId(dat.userId);params.loadEncouters(dat.userId);setDetailData(dat);
                        }}>
                     <td className="padding" >{i+1}</td>

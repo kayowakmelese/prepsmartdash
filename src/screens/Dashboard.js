@@ -149,7 +149,7 @@ const DashboardScreen=(params)=>{
             }else if(params.success.type==="EDITEDSEXTYPE"){
                 setChanged(null)
                 params.changeModalState(false,1,1,null)
-            }else if(params.success.type==="EDITSECURITYQUESTION" || params.success.type==="DELETECODE" ||  params.success.type==="PROMOTEUSER" ||  params.success.type==="DELETEDOSE" || params.success.type==="ADDDOSEMESSAGE"){
+            }else if(params.success.type==="EDITSECURITYQUESTION" || params.success.type==="DELETECODE" ||  params.success.type==="PROMOTEUSER" ||  params.success.type==="DELETEDOSE" || params.success.type==="ADDDOSEMESSAGE" || params.success.type==="CREATEADMIN" || params.success.type==="INVITATIONREQUEST"){
                 setChanged(null)
                 params.changeModalState(false,1,1,null)
             }else if(params.success.type==="ALLUSERS"){

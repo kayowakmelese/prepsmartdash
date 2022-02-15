@@ -108,7 +108,7 @@ export const generateCodes=(number,expdate)=>{
         dispatch(setDataReducer(true,null,null,null))
         axios.post(`https://${IP}/api/invitation-code/add`,params).then((data)=>{
             if(data.data){
-                dispatch(setDataReducer(false,null,{type:"INVITATIONREQUEST",message:null},data.data))
+                dispatch(setDataReducer(false,null,{type:"INVITATIONREQUEST",message:"Invitation codes created successfully!"},data.data))
             }else{
             
             }
@@ -330,8 +330,8 @@ export const sendMessage=(to,text)=>{
         axios.post(`https://${IP}/api/sms/send`,params).then((data)=>{
             if(data.data){
                 console.log("datadata",data.data)
-                dispatch(setDataReducer(false,null,{type:"SENTMESSAGE",message:"Message Sent Successfully"},data.data))
-                dispatch(loadMessages())
+                dispatch(setDataReducer(false,null,{type:"SENTMESSAGE",message:"Message Sent Successfully"},data.data.sms.message))
+                // dispatch(loadMessages())
             }else{
             
             }

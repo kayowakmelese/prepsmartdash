@@ -13,7 +13,7 @@ import Stack from '@mui/material/Stack';
 const GenerateCodes=(params)=>{
     const [codeNumber,setCodeNumber]=React.useState(null)
     const [data,setData]=React.useState(null)
-    const [page,setPage]=React.useState(0)
+    const [page,setPage]=React.useState(1)
     const [pagerCount,setPagerCount]=React.useState(null)
     React.useEffect(()=>{
         if(params.success){
@@ -56,7 +56,7 @@ const GenerateCodes=(params)=>{
             </tr>
        
         {data.map((dat,o)=>{
-         return dat.isActive && o >=page*10 && o <=(page*10)+10?<tr key={dat.invitationCodeId} style={{borderBottom:'1px solid #222 !important'}}>
+         return dat.isActive && o <=page*10 && o >=(page*10)-10?<tr key={dat.invitationCodeId} style={{borderBottom:'1px solid #222 !important'}}>
                 <td className="padding">{o+1}</td>
                 <td className="padding">{dat.invitationCode}
                 <IconButton onClick={()=>{navigator.clipboard.writeText(dat.invitationCode);params.setMessage("copied invitation code successfully!")}}>

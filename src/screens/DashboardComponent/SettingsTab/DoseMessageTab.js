@@ -14,7 +14,7 @@ import Stack from '@mui/material/Stack';
 const DoseMessageScreen=(params)=>{
     const [data,setData]=React.useState(null)
     
-    const [page,setPage]=React.useState(0)
+    const [page,setPage]=React.useState(1)
     const [pagerCount,setPagerCount]=React.useState(null)
     React.useEffect(()=>{
         if(params.success){
@@ -47,7 +47,7 @@ const DoseMessageScreen=(params)=>{
             <th className="w-5">Actions</th>
         </tr>
         {data.map((dat,o)=>{
-                return  <tr style={{borderBottom:'1px solid #222 !important'}}>
+                return  o<=page*10 && o>=(page*10)-10?<tr style={{borderBottom:'1px solid #222 !important'}}>
             <td className="padding">{o+1}</td>
             <td className='padding'>{dat.en}</td>
             <td className="padding" >{dat.es}</td>
@@ -62,7 +62,7 @@ const DoseMessageScreen=(params)=>{
 
                 <IconButton onClick={()=>{params.changeModalState(true,11,1,{id:dat.id})}}><img src={`${process.env.PUBLIC_URL}/icons/delete.svg`}  height={20} width={20}/></IconButton>
             </td>
-        </tr>
+        </tr>:null
             })
         }
        

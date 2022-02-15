@@ -251,6 +251,7 @@ button:hover {
 .red {
     background-color: orangered !important;
     color: white;
+    display: inline-block;
 }
 
 .yellow {
@@ -613,6 +614,7 @@ h2 {
     background-color: rgba(172, 255, 47, 0.274);
     border: 1px solid greenyellow;
     padding: 0 20px;
+    display: inline-block;
 }
 
 .red {

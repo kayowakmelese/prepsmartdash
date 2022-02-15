@@ -16,6 +16,7 @@ import NoItemFound from '../../../components/NoItemFound';
 
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
+import { searchString } from '../../../functions/checkSigned';
 
 
 const AdminScreen = (params) => {
@@ -35,12 +36,18 @@ const AdminScreen = (params) => {
     const [maxDate,setMaxDate]=React.useState(moment())
     const [status,setStatus]=React.useState("All")
     const [sortedData,setSortedData]=React.useState(null)
-    
-    const [page,setPage]=React.useState(0)
+    const [search,setSearch]=React.useState(null)
+
+    const [page,setPage]=React.useState(1)
     const [pagerCount,setPagerCount]=React.useState(null)
     React.useEffect(() => {
         params.loadAdmins()
     }, [])
+    React.useEffect(()=>{
+        if(search){
+          setSortedData(searchString(search,allData))
+        }
+    },[search])
     React.useEffect(() => {
         if (params.success) {
             if (params.success.type === "ALLADMINS") {
@@ -120,7 +127,7 @@ const AdminScreen = (params) => {
                         </div>
                         <br />
                         <div className="f-flex " style={{justifyContent:'space-between'}}>
-            <TextField label="search" placeholder="search" variant='outlined' className='w-30'/>
+            <TextField label="search" value={search} onChange={(e)=>setSearch(e.target.value)} placeholder="search" variant='outlined' className='w-30'/>
             <div className="f-flex w-40 " style={{justifyContent:'space-between',alignContent:'center'}}>
               <Typography variant="p" style={{fontSize:15,alignSelf:'center',textAlign:'center'}} className="w-30">Created at</Typography>
              <LocalizationProvider dateAdapter={DateAdapter}>
@@ -174,14 +181,14 @@ const AdminScreen = (params) => {
                                 </tr>
                                 {
                                    sortedData?sortedData.map((dat, i) => {
-                                        return  i >=page*10 && i <=(page*10)+10?<tr className="tr-hover" style={{ cursor: 'pointer' }} onClick={() => {
+                                        return  i <=page*10 && i >=(page*10)-10?<tr className="tr-hover" style={{ cursor: 'pointer' }} onClick={() => {
                                             setScreen(2); setSelectedId(dat.userId); params.loadEncouters(dat.userId); setDetailData(dat);
                                         }}>
                                             <td className="padding" >{i + 1}</td>
                                             <td className="padding"><p style={{ alignSelf: 'center', marginLeft: 10, color: colors.primary10 }}>{dat.firstName} {dat.lastName}</p></td>
                                             <td className="padding">{dat.email}</td>
                                             <td className="padding">
-                                                <p className={`${dat.isActive ? 'green' : 'red'} w-30`}>
+                                                <p className={`${dat.isActive ? 'green' : 'red'}`}>
                                                     <Typography color={dat.isActive ? 'green' : 'orangered'} variant={'p'} sx={{ color: dat.isActive ? 'green !important' : 'orangered !important', borderColor: dat.isActive ? 'green' : 'red', borderWidth: 1 }} >{dat.isActive ? "Active" : "Deactive"}</Typography>
                                                 </p>
                                             </td>
@@ -200,7 +207,7 @@ const AdminScreen = (params) => {
 
                                         </tr>:null
                                     }):allData.map((dat, i) => {
-                                        return  i >=page*10 && i <=(page*10)+10?<tr className="tr-hover" style={{ cursor: 'pointer' }} onClick={() => {
+                                        return  i <=page*10 && i >=(page*10)-10?<tr className="tr-hover" style={{ cursor: 'pointer' }} onClick={() => {
                                             setScreen(2); setSelectedId(dat.userId); params.loadEncouters(dat.userId); setDetailData(dat);
                                         }}>
                                             <td className="padding" >{i + 1}</td>

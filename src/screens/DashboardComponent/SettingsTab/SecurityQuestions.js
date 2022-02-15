@@ -13,7 +13,7 @@ import Stack from '@mui/material/Stack';
 const SecurityQuestionScreen=(params)=>{
     const [data,setData]=React.useState(null)
     
-    const [page,setPage]=React.useState(0)
+    const [page,setPage]=React.useState(1)
     const [pagerCount,setPagerCount]=React.useState(null)
     React.useEffect(()=>{
         if(params.success){
@@ -49,12 +49,12 @@ const SecurityQuestionScreen=(params)=>{
         </tr>
         {data.map((dat,o)=>{
             let id=dat.id;
-                return   o >=page*10 && o <=(page*10)+10?<tr style={{borderBottom:'1px solid #222 !important'}}>
+                return   o <=page*10 && o >=(page*10)-10?<tr style={{borderBottom:'1px solid #222 !important'}}>
             <td className="padding">{o+1}</td>
             <td className="padding">{dat.en}</td>
             <td className="padding">{dat.es}</td>
             <td className='padding'>
-                             <p className={`${dat.isActive?'green':'red'} w-30`}>
+                             <p className={`${dat.isActive?'green':'red'}`}>
                             <Typography color={dat.isActive?'green':'orangered'} variant={'p'} sx={{color:dat.isActive?'green !important':'orangered !important',borderColor:dat.isOnCycle?'green':'red',borderWidth:1}} >{dat.isActive?"Active":"Deactive"}</Typography>
             </p>
                          </td>

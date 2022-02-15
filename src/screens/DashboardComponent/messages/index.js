@@ -20,25 +20,23 @@ const MessageScreen=(params)=>{
     const [selectedUser,setSelectedUser]=React.useState(null)
     const [message,setMessage]=React.useState(null)
     const [parsedData,setParsedData]=React.useState(null)
-    
-    const [page,setPage]=React.useState(0)
+    const scrollref=React.useRef(null)
+    const [page,setPage]=React.useState(1)
     const [pagerCount,setPagerCount]=React.useState(null)
+    const [sortedMessage,setSortedMessage]=React.useState(null)
     
     React.useEffect(()=>{
         if(params.success){
             if(params.success.type==="ALLMESSAGES"){
+                setSortedMessage(sortAllMessages(params.data))
                 setMessages(params.data)
-                
-                setPagerCount(parseInt(params.data.length/10))
               
             }else if(params.success.type==="SENTMESSAGE"){
-                setMessages(params.data)
+                // setMessages(params.data)
                 
-                setPagerCount(parseInt(params.data.length/10))
-
-                if(screen===2){
-                    parseData(selectedUser.direction==="outbound-api"?selectedUser.to:selectedUser.from)
-                }
+                let arr=parsedData;
+                arr.push(params.data)
+                setTimeout(()=>scrollref.current.scrollIntoView(),1000)
             }
 
             
@@ -58,6 +56,33 @@ const MessageScreen=(params)=>{
         setParsedData(arr);
         return arr;
     }
+    const sortAllMessages=(allMessages)=>{
+        let arr=[]
+
+        for(var i=0;i<allMessages.length;i++){
+            let bool=true;
+            if(arr.length>0){
+                    for(var k=0;k<arr.length;k++){
+                       
+                        if(allMessages[i].to ===arr[k].to && allMessages[i].from===arr[k].from){
+                           bool=false;
+                        }else  if(allMessages[i].from ===arr[k].to && allMessages[i].to===arr[k].from){
+                                bool=false;
+                        }
+                        console.log("fuck",allMessages[i].to ===arr[k].to && allMessages[i].from===arr[k].from?true:false)
+
+                    }
+                    if(bool===true){
+                        arr.push(allMessages[i])
+                    }
+            }else{
+                console.log("iwashere",allMessages[i])
+                arr.push(allMessages[i])
+            }
+        }
+        console.log("array",allMessages)
+        return arr;
+    }
     return (
         <div className='padding w-f'>
             <p><b>Messages</b></p>
@@ -65,8 +90,8 @@ const MessageScreen=(params)=>{
             <br/><br/>
             <div className="border  w-f padding" >
                 {screen===1?<div>
-                   { messages && messages.length>0?messages.map((dat,i)=>{
-                        return  i >=page*10 && i <=(page*10)+10?<div className="padding f-flex" onClick={()=>{setSelectedUser(dat);setScreen(2);parseData(dat.direction==="outbound-api"?dat.to:dat.from)}} style={{backgroundColor:dat.direction==="outbound-api"?'#00d50003':'#7ae91e08',justifyContent:'space-between',cursor:'pointer'}}>
+                   { sortedMessage && sortedMessage.length>0?sortedMessage.map((dat,i)=>{
+                        return  i <=page*10 && i >=(page*10)-10?<div className="padding f-flex" onClick={()=>{setSelectedUser(dat);setScreen(2);parseData(dat.direction==="outbound-api"?dat.to:dat.from)}} style={{backgroundColor:dat.direction==="outbound-api"?'#00d50003':'#7ae91e08',justifyContent:'space-between',cursor:'pointer'}}>
                         
                        <div> <p style={{fontSize:12,color:colors.primary10}}>{dat.to}</p>
                        <p><b>{dat.body}</b></p>
@@ -91,7 +116,7 @@ const MessageScreen=(params)=>{
                         <p style={{alignSelf:'center'}}>{selectedUser.to}</p>
                         <br/>
                         </div>
-                        <div style={{maxHeight:400,overflowY:'scroll'}}>
+                        <div style={{maxHeight:400,overflowY:'scroll',scrollBehavior:'smooth'}}>
                         {
                             parsedData?parsedData.map((dat,i)=>{
                                 return <div className={`padding f-flex ${dat.to===(selectedUser.direction==='outbound-api'?selectedUser.to:selectedUser.from)?'bubble-right':'bubble-left'}`}>
@@ -103,12 +128,13 @@ const MessageScreen=(params)=>{
                                             dat.status==="undelivered" || dat.status==="failed"?<CloseIcon style={{fontSize:15,color:'red'}}/>:dat.status==="delivered"?<CheckCircleOutlineIcon style={{fontSize:15,color:'green'}}/>:dat.status==="received"?<CheckCircleIcon/>:null
                                             :null
                                         }
-                                        <p style={{color:colors.primary10,fontSize:12,textAlign:'inherit'}}>{moment(dat.dateSent).format('MMM DD HH:MM')}</p>
+                                        <p style={{color:colors.primary10,fontSize:12,textAlign:'inherit'}}>{moment(dat.dateSent?dat.dateSent:dat.dateCreated).format('MMM DD HH:MM')}</p>
                                         </div>
                                     </div>
                                 </div>
                             }):null
                         }
+                        <div id="scrolltobottom w-10" style={{height:20}} ref={scrollref}></div>
                         </div>
                         
                         <div className="white f-flex" style={{justifyContent:'center'}}>
