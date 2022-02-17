@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { DataGrid } from '@mui/x-data-grid';
-import { Button, IconButton, Modal, TextField, Typography,Avatar,Box,Tabs,Tab,TabPanel ,MenuItem,Select,CircularProgress} from '@mui/material';
+import { Button, IconButton, Modal,FormControl ,InputLabel, TextField, Typography,Avatar,Box,Tabs,Tab,TabPanel ,MenuItem,Select,CircularProgress} from '@mui/material';
 import { colors } from '../../../styles';
 import { AddCircleRounded,ChevronLeft,Add, Search } from '@mui/icons-material';
 import { InputAdornment } from '@material-ui/core';
@@ -39,7 +39,7 @@ const UserScreen=(params)=>{
         params.loadUsers()
     },[])
     React.useEffect(()=>{
-      if(search){
+      if(search && search.length>0){
         setSortedData(searchString(search,allData))
       }
   },[search])
@@ -166,7 +166,7 @@ const UserScreen=(params)=>{
              <LocalizationProvider dateAdapter={DateAdapter}>
               <DesktopDatePicker
           label="minimum date"
-          inputFormat="MM/dd/yyyy"
+          inputFormat="MM/DD/YYYY"
           
           className="border"
           value={minDate}
@@ -175,7 +175,7 @@ const UserScreen=(params)=>{
 
            <DesktopDatePicker
           label="maximum date"
-          inputFormat="MM/dd/yyyy"
+          inputFormat="MM/DD/YYYY"
           value={maxDate}
           className="border"
           onChange={setMaxDate}
@@ -185,16 +185,20 @@ const UserScreen=(params)=>{
             </div>
             <div className="f-flex w-20 " style={{justifyContent:'center',alignContent:'center'}}>
               <Typography variant="p" style={{fontSize:15,alignSelf:'center'}} className="padding" >Status</Typography>
-              <Select className="w-50"
-                labelId="demo-simple-select-label"
+              <FormControl className="w-50">
+
+              <Select className="w-f"
+                labelId="demo-simple-select-labelb"
                 value={status}
-                label="status"
+                label="Status"
                 onChange={(e)=>setStatus(e.target.value)}
   >
+    
         <MenuItem value={"All"}>All</MenuItem>
         <MenuItem value={"true"}>Active</MenuItem>
         <MenuItem value={"false"}>Deactive</MenuItem>
   </Select>
+  </FormControl>
             </div>
           </div>
         </div>
@@ -306,18 +310,21 @@ const UserScreen=(params)=>{
 <div className="f-flex" style={{justifyContent:'space-between'}}>
   
   <TextField label="Email" variant={'outlined'} className="w-40" disabled={true} value={detailData?detailData.email:null}/>
-  
+                        <FormControl label="status" className="w-40">
+                        <InputLabel id="demo-simple-select-label">Status</InputLabel>
+
                                  <Select 
                 value={isActive===null?detailData.isActive?detailData.isActive:false:isActive}
                 label="status"
                 id="seleted"
                 variant='outlined'
-                className="w-40"
+                className="w-f"
                 onChange={(e)=>setIsActive(e.target.value)}
   >
         <MenuItem value={true}>Active</MenuItem>
         <MenuItem value={false}>InActive</MenuItem>
   </Select>
+  </FormControl>
 
   </div>
   <br/><br/>
