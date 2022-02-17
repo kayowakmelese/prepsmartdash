@@ -2,7 +2,7 @@ import { Alert, Checkbox, CircularProgress, TextField } from '@mui/material'
 import * as React from 'react'
 import { Link,useNavigate  } from 'react-router-dom'
 
-import { signIn,resetPassword } from '../action'
+import { signIn,resetPassword, setDataReducer } from '../action'
 import {colors} from '../styles/index'
 import {connect} from 'react-redux'
 import { Snackbar } from '@material-ui/core'
@@ -106,7 +106,7 @@ const SignInScreen=(params)=>{
                <p style={{alignSelf:'center',fontSize:12,color:'#1890ff',cursor:'pointer'}} onClick={()=>setScreen(1)}>Forgot your password?</p>
            </div>
            
-           <button style={{borderRadius:5,backgroundColor:colors.primary10,padding:15,marginTop:'5%'}} className='w-f' onClick={()=>params.signIn(username,password,rememberMe)}>
+           <button style={{borderRadius:5,backgroundColor:colors.primary10,padding:15,marginTop:'5%'}} className='w-f' onClick={()=>{username.trim().length>0 && password.trim().length>0?params.signIn(username,password,rememberMe):params.setMessage("Please enter email and password to continue")}}>
                {
                    params.uisLoading?<CircularProgress size={20} sx={{color:'white'}}/>:<p className='t-b t-w'>Log in</p>
                }
@@ -142,7 +142,9 @@ const mapDispatchTopProps=(dispatch)=>{
     return {
 
         signIn:(username,password,rememberme)=>dispatch(signIn(username,password,rememberme)),
-        resetEmail:(email)=>dispatch(resetPassword(email))
+        resetEmail:(email)=>dispatch(resetPassword(email)),
+        
+        setMessage:(message)=>dispatch(setDataReducer(false,message,null,null)),
     }
 }
 export default connect (mapStateToProps,mapDispatchTopProps)(SignInScreen)
