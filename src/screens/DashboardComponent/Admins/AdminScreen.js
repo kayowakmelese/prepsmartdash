@@ -44,7 +44,7 @@ const AdminScreen = (params) => {
         params.loadAdmins()
     }, [])
     React.useEffect(()=>{
-        if(search){
+        if(search && search.length>0){
           setSortedData(searchString(search,allData))
         }
     },[search])
@@ -133,7 +133,7 @@ const AdminScreen = (params) => {
              <LocalizationProvider dateAdapter={DateAdapter}>
               <DesktopDatePicker
           label="minimum date"
-          inputFormat="MM/dd/yyyy"
+          inputFormat="MM/DD/YYYY"
           
           className="border"
           value={minDate}
@@ -142,7 +142,7 @@ const AdminScreen = (params) => {
 
            <DesktopDatePicker
           label="maximum date"
-          inputFormat="MM/dd/yyyy"
+          inputFormat="MM/DD/YYYY"
           value={maxDate}
           className="border"
           onChange={setMaxDate}
