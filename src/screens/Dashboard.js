@@ -8,7 +8,7 @@ import MemberShip from './DashboardComponent/Dashboard/MembershipScreen';
 import TeamScreen from './DashboardComponent/TeamTabs/TeamScreen';
 import SettingScreen from './DashboardComponent/SettingsTab/SettingScreen';
 import NotificationsScreen from './DashboardComponent/NotificationTab/NotificationsScreen'
-import { checkSigned, checkSignedFromReducer } from '../functions/checkSigned'
+import { checkInputs, checkSigned, checkSignedFromReducer, cleanBatch, validateInput } from '../functions/checkSigned'
 import { connect } from 'react-redux';
 import { addBatchSecurityQuestion, addBatchSexType,loadAllUsers,deleteDoseMessage,editDoseMessage,addDoseMessage,promoteUser,dispatchSigned,createAdmin,logout, addSecurityQuestions,generateCodes,editSecurityQuestion, addSexType, setDataReducer, editSexType,setModalReducer,deleteSexType,deleteSecurityQuestion, deleteInvitationCode } from '../action';
 import { CircularProgress } from '@mui/material';
@@ -53,6 +53,7 @@ const DashboardScreen=(params)=>{
     const [expDate,setExpDate]=React.useState(null)
     const [userDatas,setUserDatas]=React.useState(null)
     const [selected,setSelected]=React.useState(null)
+    const [alertMessage,setAlertMessage]=React.useState(null)
       let history = useNavigate();
       const [anchorEl, setAnchorEl] = React.useState(null);
       const open = Boolean(anchorEl);
@@ -86,15 +87,15 @@ const DashboardScreen=(params)=>{
         setTimeout(()=>{
             if(params.success || params.error){
                 if(params.success ){
-                    if(params.success.message){setShowAlert(true)}
+                    if(params.success.message){setShowAlert(true);setAlertMessage({type:1,message:params.success.message})}
                 }else{
                     if(params.error.length>0){
                         setShowAlert(true);
-
+                        setAlertMessage({type:2,message:params.error})
+                    }else{
+                        setShowAlert(false)
                     }
                 }
-            }else{
-                setShowAlert(false);
             }
             setTimeout(()=>setShowAlert(false),3000);
         },500)
@@ -112,6 +113,8 @@ const DashboardScreen=(params)=>{
             setModalScreen(4)
         }else if(params.screen===5){
             setModalScreen(5)
+        }else if(params.screen===6){
+            setModalScreen(6)
         }else if(params.screen===7){
             setModalScreen(7)
         }else if(params.screen===8){
@@ -138,10 +141,15 @@ const DashboardScreen=(params)=>{
     React.useEffect(()=>{
         if(params.success){
             setId(null);
+            setBatch(cleanBatch(batch));
             if(params.success.type==="AddSECURITYQUESTIONS"){
                 setModal(false);
+                setChanged(null)
+                params.changeModalState(false,1,1,null)
             }else if(params.success.type==="ADDSEXTYPE"){
                 setSexType(" ")
+                setChanged(null)
+                params.changeModalState(false,1,1,null)
             }else if(params.success.type==="DELETESEXTYPE"){
                 params.changeModalState(false,1,1,null)
             }else if(params.success.type==="DELETESECURITYQUESTION"){
@@ -202,10 +210,22 @@ const DashboardScreen=(params)=>{
     return false;
     }
     }
+    React.useEffect(()=>{
+        if(!params.modalVisible){
+            setCodeNumber(null)
+            setExpDate(null);
+            setFirstName(null);
+            setSecondName(null);
+            setPassword(null);
+            setConfirmPassword(null);
+            setEmail(null)
+        }
+    },[params.modalVisible])
     return <div>
      <Snackbar  anchorOrigin={{ vertical: 'top',horizontal: 'right'}} open={showAlert}  autoHideDuration={6000}>
-         {params.success? <Alert  color={'success'}>{params.success.message}</Alert>:
-         <Alert  severity='error'>{params.error}</Alert>
+        
+         {
+             <Alert color={alertMessage?alertMessage.type===1?'success':'error':'success'}>{alertMessage?alertMessage.message:null}</Alert>
          }  
        </Snackbar>
       
@@ -479,18 +499,18 @@ const DashboardScreen=(params)=>{
            
            <center >
            <div className='padding white w-30' style={{marginTop:'10%'}}>
-           <p className="padding">Create Invitations</p>
-           <TextField type="number" onChange={(e)=>setCodeNumber(e.target.value)} label="Number of codes" variant={"outlined"} className="w-f"/>
+           <p className="padding">{params.progress===1?'Create':'Edit'} Invitation</p>
+           <TextField type={params.someValue?"text":"number"} onChange={(e)=>setCodeNumber(e.target.value)} value={params.progress===2 && !codeNumber?setCodeNumber(params.someValue.value):codeNumber} label={params.someValue?"invitation code":"Number of codes"} variant={"outlined"} className="w-f"/>
         <br/><br/>
         <LocalizationProvider dateAdapter={DateAdapter} className="w-f">
               <DesktopDatePicker
           label="expiration date"
-          inputFormat="MM/dd/yyyy"
-          value={expDate}
+          inputFormat="MM/DD/YYYY"
+          value={expDate?expDate.toString().length>0?expDate:null:params.progress===1?null:setExpDate(params.someValue.expDate)}
           className="w-f"
           variant={'outlined'}
           minDate={moment()}
-          onChange={setExpDate}
+          onChange={(e)=>setExpDate(e._d)}
           renderInput={(params) => <TextField {...params} className={'w-f'} variant={'outlined'} />}/>
 </LocalizationProvider>
 <br/><br/>
@@ -664,22 +684,22 @@ const mapDispatchTopProps=(dispatch)=>{
         setMessage:(message)=>dispatch(setDataReducer(false,message,null,null)),
         addSexType:(en)=>dispatch(addSexType(en)),
         changeModalState:(visible,screen,progress,someValue)=>dispatch(setModalReducer(visible,screen,progress,someValue)),
-        addBatchSecurityQuestion:(batch)=>dispatch(addBatchSecurityQuestion(batch)),
-        addBatchSexType:(batch)=>dispatch(addBatchSexType(batch)),
+        addBatchSecurityQuestion:(batch)=>validateInput(batch)?dispatch(addBatchSecurityQuestion(batch)):dispatch(setDataReducer(false,"Add value in order to continue",null,null)),
+        addBatchSexType:(batch)=>{validateInput(batch)?dispatch(addBatchSexType(batch)):dispatch(setDataReducer(false,"Add value in order to continue",null,null))},
         deleteSexType:(id)=>dispatch(deleteSexType(id)),
         deleteSecurityQuestion:(id)=>dispatch(deleteSecurityQuestion(id)),
-        editSexType:(value,es,status,id)=>dispatch(editSexType(value,es,status,id)),
-        editSecurityQuestion:(value,es,status,id)=>dispatch(editSecurityQuestion(value,es,status,id)),
-        createAdmin:(firstname,lastname,email,password)=>dispatch(createAdmin(firstname,lastname,email,password)),
-        generateCode:(numer,date)=>dispatch(generateCodes(numer,date)),
+        editSexType:(value,es,status,id)=>checkInputs(value,es,status,id)?dispatch(editSexType(value,es,status,id)):dispatch(setDataReducer(false,"Add value in order to continue",null,null)),
+        editSecurityQuestion:(value,es,status,id)=>checkInputs(value,es,status,id)?dispatch(editSecurityQuestion(value,es,status,id)):dispatch(setDataReducer(false,"Add value in order to continue",null,null)),
+        createAdmin:(firstname,lastname,email,password)=>checkInputs(firstname,lastname,email,password)?dispatch(createAdmin(firstname,lastname,email,password)):dispatch(setDataReducer(false,"Add value in order to continue",null,null)),
+        generateCode:(numer,date)=>checkInputs(numer)?dispatch(generateCodes(numer,date)):dispatch(setDataReducer(false,"Add value in order to continue",null,null)),
         deleteInvitation:(id)=>dispatch(deleteInvitationCode(id)),
         logout:()=>dispatch(logout()),
         dispatchers:()=>dispatch(dispatchSigned()),
         loaduser:()=>dispatch(loadAllUsers()),
         promoteUser:(id)=>dispatch(promoteUser(id)),
         deleteDoseMessage:(id)=>dispatch(deleteDoseMessage(id)),
-        editDoseMessage:(value,es,status,id)=>dispatch(editDoseMessage(value,es,status,id)),
-        addDoseMessage:(batch,status)=>dispatch(addDoseMessage(batch,status))
+        editDoseMessage:(value,es,status,id)=>checkInputs(value,es,status,id)?dispatch(editDoseMessage(value,es,status,id)):dispatch(setDataReducer(false,"Add value in order to continue",null,null)),
+        addDoseMessage:(batch,status)=>validateInput(batch)?dispatch(addDoseMessage(batch,status)):dispatch(setDataReducer(false,"Add value in order to continue",null,null))
     }
 }
 export default connect(mapStateToProps,mapDispatchTopProps)(DashboardScreen)
