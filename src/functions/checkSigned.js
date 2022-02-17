@@ -51,3 +51,33 @@ export const searchString=(key,givenArray)=>{
     }
     return arr;
   }
+  export const validateInput=(batch)=>{
+      let bool=false;
+      for(var i=0;i<batch.length;i++){
+            if(batch[i].value?batch[i].value.trim().length>0:false && batch[i].es?batch[i].es.trim().length>0:false && batch[i].status?batch[i].status.trim().length>0:false){
+                bool=true;
+            }
+      }
+      return bool
+  }
+  export const cleanBatch=(batch)=>{
+    let arr=[];
+    for(var i=0;i<batch.length;i++){
+           batch[i].value=null;
+           batch[i].es=null;
+           batch[i].status=null;
+           
+    } 
+    return batch;  
+  }
+  export const checkInputs=(...inputs)=>{
+      let bool=false;
+      for(let val of inputs){
+          if(val && val?val.trim().length>0:false){
+
+          }else{
+              bool=false;
+          }
+      }
+      return bool;
+  }
